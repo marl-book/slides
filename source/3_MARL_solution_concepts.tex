@@ -1,0 +1,699 @@
+% !TEX program = xelatex
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{preamble.tex}
+\leoslide
+
+\subtitle{Solution Concepts for Games}
+
+\begin{document}
+\maketitle
+
+\introslide
+
+\begin{frame}{\outline}
+
+\blist
+    \item Joint policy and expected return
+    \item Equilibrium solution concepts
+    \item Additional solution criteria 
+    \item Complexity of computing equilibria
+\elist
+    
+\end{frame}
+
+\begin{frame}{}
+
+    \begin{figure}
+        \centering
+        \includegraphics{images/chapter_4/marl-learning-problem.pdf}
+        % \caption{Caption}
+        % \label{fig:enter-label}
+    \end{figure}
+    
+    What does it mean to act optimally in a multi-agent system?
+
+    \blist
+        \item Maximizing returns of one agent is no longer enough to determine a solution
+        \item We must consider the joint policy of all agents
+        \item This is less straightforward, and there are many different solution concepts
+    \elist
+    
+\end{frame}
+
+\section{Joint Policy and Expected Return}
+
+\begin{frame}{Joint Policy}
+
+    The joint policy is the combination of all agents' policies. 
+
+    \blist
+        \item \(\pi = (\pi_1, ..., \pi_n)\) is the joint policy 
+    \elist
+
+    The probability of a joint action under joint policy $\pi$ can be defined as:
+
+    \[
+        \pi(a^{\tau}|h^{\tau}) = \prod_{j \in I}\pi_{j}(a_{j}^\tau | h^{\tau}_j)
+    \]
+
+    \begin{notebox}
+        This definition assumes probabilistic independence between agents' policies. 
+    \end{notebox}
+
+\end{frame}
+
+\begin{frame}{Additional Notation}
+
+    In the multi-agent setting, we add the following notation: 
+
+    \blist
+        \item \(\hat{h} = \{(s^{\tau}, o^{\tau}, a^{\tau})_{\tau = 0}^{t-1}, s^t, o^t\}\) is the \fat{full history} containing:
+        \blist
+            \item \(s^\tau\), states up to \(t-1\)
+            \item \(o^\tau\), joint observations up to \(t-1\)
+            \item  \(a^{\tau}\), joint actions up to \(t-1\)
+            \item \(s^t\) and \(o^t\) at current time step \(t\)
+        \elist
+        \item \(\sigma(\hat{h}^t) = (o^0, ..., o^t)\) is a function that returns the joint observation history from the \fat{full history} 
+        \item \(\mathcal{O}(o^t|a^{t-1}, s^t)\) is the joint observation probability
+    \elist
+    
+\end{frame}
+
+\begin{frame}{History Based Expected Return}
+
+    Given a joint policy \(\pi\), we can define the expected return for agent \(i\) under \(\pi\) as the probability-weighted sum of returns for agent \(i\) under all possible \fat{full histories.}
+    \vspace{5pt}
+    \blist
+        \item Let $\hat{H}$ be a set containing all full histories $\hat{h}^t$ for $t \to \infty$
+        \item then the expected return for agent $i$ under joint policy \(\pi\) is given by:
+    \elist
+    \vspace{0pt}
+    \begin{align*}
+         U_i(\pi) &= \lim_{t \to \infty} \mathbb{E}_{\hat{h}^t \sim (\mu, \mathcal{T}, \mathcal{O}, \pi)}\left[u_{i}(\hat{h}^t) \right] \\[5pt]
+         &= \sum_{\hat{h}^t \in \hat{H}} \Pr(\hat{h}^t|\pi)u_i(\hat{h}^t)
+    \end{align*}
+
+
+        
+\end{frame}
+
+\begin{frame}{History Based Expected Return - Continued}
+
+    The probability of a full history $\Pr(\hat{h}^t|\pi)$ is:
+    \vspace{2pt}
+    \[
+        \Pr(\hat{h}^t | \pi) = \mu(s^0)\mathcal{O}(o^0 | \emptyset, s^0) \prod_{\tau=0}^{t-1} \pi(a^\tau | \hat{h}^\tau)\mathcal{T}(s^{\tau+1} | s^\tau, a^\tau)\mathcal{O}(o^{\tau+1} | a^\tau, s^{\tau+1})
+    \]
+
+    \(u_i(\hat{h}^t)\) is the discounted return for agent \(i\) in the \fat{full history}
+
+    \[
+        u_i(\hat{h}^t) = \sum_{\tau=0}^{t-1} \gamma^\tau R_i(s^\tau, a^\tau, s^{\tau+1})
+    \]
+    
+\end{frame}
+
+\begin{frame}{Recursive Expected Returns}
+
+    Expected returns under a \fat{joint policy} can also be defined recursively, analogously to the Bellman recursion. 
+        \vspace{2pt}
+    \[
+        V^{\pi}_i(\hat{h}) = \sum_{a \in A} \pi(a \mid \sigma(\hat{h})) Q^{\pi}_i (\hat{h}, a)
+    \]
+
+    We can use this to define a \(Q\) function for the individual agent \(i\) as follows:
+    \vspace{2pt}
+    \[
+        Q^{\pi}_i(\hat{h}, a) = \sum_{s' \in S} \mathcal{T}(s' \mid s(\hat{h}), a) \left[ \mathcal{R}_i(s(\hat{h}), a, s') + \gamma \sum_{o' \in O} O(o' \mid a, s') V^{\pi}_i(\langle \hat{h}, a, s', o'\rangle) \right]
+    \]
+
+    \blist
+        \item \(s(\hat{h})\) denotes the last state in \(\hat{h}\) such that \(s(\hat{h}) = s^t\)
+    \elist
+    
+\end{frame}
+
+\begin{frame}{Recursive Expected Returns - Continued}
+
+    \blist
+        \item \(V^{\pi}_i(\hat{h})\) is the \fat{value} or \fat{expected return} for agent \(i\) when agents follow \fat{joint policy} \(\pi\)
+        \item \(Q^{\pi}_i(\hat{h}, a)\) is the \fat{expected return} for agent \(i\) when agents execute \fat{joint action} \(a\) after \(\hat{h}\) and follow \(\pi\) thereafter
+        \item Given the definition for \(V^{\pi}_i(\hat{h}\)) and  \(Q^{\pi}_i(\hat{h}, a)\), we can define the expected return for agent \(i\) at the initial state \(s^0\) as:
+    \elist
+    \vspace{2pt}
+    \[
+    U_i(\pi) = \mathbb{E}_{s_0 \sim \mu, o_0 \sim \mathcal{O}(\cdot \mid \emptyset,  s_0)} \left[ V^{\pi}_i(\langle s_0, o_0 \rangle) \right]
+    \]
+    
+\end{frame}
+
+\section{Best Response}
+
+\begin{frame}{Best Response}
+
+    The \fat{best-response} policy is the policy that maximizes the expected return for agent \(i\) against a given set of policies for all other agents \(\pi_{-i} = (\pi_1, ..., \pi_{i-1}, \pi_{i+1}, ..., \pi_{n})\).
+
+    \blist
+        \item  A best response for agent \(i\) to \(\pi_{-i}\) is a policy \(\pi_i\) that maximizes the expected return for agent \(i\) when facing \(\pi_{-i}\)
+    \elist
+    \vspace{2pt}
+    \[
+        \text{BR}_i(\pi_{-i}) = \argmax_{\pi_{i}} U_i(\langle\pi_i, \pi_{-1}\rangle)
+    \]
+
+    \blist
+        \item Where $\langle\pi_i, \pi_{-1}\rangle$ is the entire \fat{joint policy}
+    \elist
+    
+\end{frame}
+
+\section{Equilibrium Solution Concepts}
+
+\begin{frame}{Minimax}
+
+    \fat{Minimax} is a solution concept defined for \fat{two-agent zero-sum} games. Recall that one agent's reward is the negative of the other agent's reward.
+    \blist
+        \item The existence of minimax solution in \fat{normal-form} games was first proven by John von Neumann (1928)
+        \item Minimax solutions also exist in \fat{two-agent zero-sum stochastic games }with finite episode lengths like chess and Go. 
+    \elist
+    
+\end{frame}
+
+\begin{frame}{Minimax Definition}
+
+    In a two-agent, zero-sum game, a joint policy \(\pi = (\pi_i, \pi_j)\) is a minimax solution if
+    \vspace{2pt}
+    \begin{align}
+        U_i(\pi) &= \max_{\pi'_i} \min_{\pi'_j} U_i(\pi'_i, \pi'_j) \\
+        &= \min_{\pi'_j} \max_{\pi'_i} U_i(\pi'_i, \pi'_j) \\
+        &= -U_j(\pi).
+    \end{align}
+
+    \blist
+        \item Equation 1 is the minimum expected return agent \(i\) can guarantee against any opponent
+        \item Equation 2 is the minimum expected return agent \(j\) can \fat{force} on agent \(i\)
+        \item A minimax solution is the \fat{best response} to the \fat{worst-case} opponent
+        \item \((\pi_i, \pi_j)\) is a minimax solution if \(\pi_i \in \text{BR}_i(\pi_j)\) \underline{and} \(\pi_j \in \text{BR}_j(\pi_i)\)
+    \elist
+      
+\end{frame}
+
+\begin{frame}{Minimax via Linear Programming}
+
+We can obtain a minimax solution for non-repeated zero-sum normal-form games by solving two linear programs, one for each agent.
+    \vspace{0pt}
+    \begin{align*}
+    \text{minimize} \quad & U^*_j \\
+    \text{subject to} \quad & \sum_{a_i \in A_i} \mathcal{R}_j(a_i, a_j) x_{a_i} \leq U^*_j & \forall a_j \in A_j \\
+    & x_{a_i} \geq 0 & \forall a_i \in A_i \\
+    & \sum_{a_i \in A_i} x_{a_i} = 1
+    \end{align*}
+
+    \blist
+        \item Minimizing agent \(j\)'s return \(U^*_j\)
+        \item Such that no single action of agent \(j\) can receive a greater return than \(U^*_j\) when agent \(i\) follows \(\pi_i(a_i) = x_{a_i}\)
+    \elist
+\end{frame}
+
+\begin{frame}{Nash Equilibrium}
+
+    The Nash equilibrium solution concept applies the idea of a \fat{mutual best response} to general-sum games with two or more agents.
+    \vspace{2pt}
+    \blist
+        \item John Nash (1950) proved the existence of such a solution for \fat{general-sum non-repeated normal-from games}
+        \item No agent \(i\) can improve its expected returns by changing its policy \(\pi_i\) assuming other agents policies remain fixed
+    \elist
+    \vspace{2pt}
+    \begin{equation*}
+        \forall i , \pi_{i}': U_{i}(\pi_{i}', \pi_{-i}) \le U_{i}(\pi)
+    \end{equation*}
+
+    \blist
+        \item Each agent's policy in the Nash equilibrium is a \fat{best response} to all other agent's policies
+    \elist
+        
+\end{frame}
+
+\begin{frame}{Nash Equilibrium in Matrix Games}
+
+
+    \begin{figure}[ht]
+        \centering
+        \begin{minipage}[bt]{0.32\textwidth}
+            \centering
+            \gamepd
+            \caption{Prisoners Dilemma}
+            \only<2-4>{NE at D, D (-3, -3)}
+        \end{minipage}\hfill
+        \begin{minipage}[bt]{0.32\textwidth}
+            \centering
+            \gamecoord
+            \caption{Coordination Game}
+            \only<3-4>{Two NE's at A, A (10) and \\ B, B (10)} 
+        \end{minipage}\hfill
+        \begin{minipage}[bt]{0.32\textwidth}
+            \centering
+            \gamerps
+            \caption{Rock Paper Scissors}
+            \only<4>{NE is to choose actions uniformly at random with expected return 0} % Appears beneath the third minipage
+        \end{minipage}
+    \end{figure}
+    
+    \uncover<1>{Can you identify the Nash equilibria?}
+    
+
+\end{frame}
+
+\begin{frame}{Folk Theorem in Repeated Normal Form Games}
+
+    Folk theorems provide solutions for \fat{repeated normal-form games} showing that any \fat{set} of \fat{feasible} and \fat{enforceable} expected returns \(\hat{U}\) can be achieved by an equilibrium solution if agents are far-sighted (\(\gamma\) close to 1).
+
+    \blist
+        \item \(\hat{U}\) is \fat{feasible} if it can be achieved by a joint policy \(\pi\)
+        \item \(\hat{U}\) is \fat{enforceable} if each \(\hat{U_i}\) is at least as great as the agent's minmax value \(v_i\)
+    \elist
+    \vspace{0pt}
+    
+    \begin{equation*}
+        v_i = \min_{\pi_{-i}^mm}\max_{\pi_{i}^mm}U_i(\pi_{i}^mm, \pi_{-i}^mm)
+    \end{equation*}
+
+    \blist
+        \item When \(\hat{U}\) is enforceable no agent has an incentive to deviate from \(\pi\), deviating results in other agents \fat{enforcing} the minmax value \(v_i \leq \hat{U_i}\)
+    \elist
+
+\end{frame}
+
+% \begin{frame}{Folk Theorem Repeated Prisonners Dilemma}
+
+%   \fat{Scenario:} Alice and Bob in an Iterated Prisoner's Dilemma, both far-sighted.
+    
+%     \only<1>{
+%         \begin{minipage}[c][\textheight][c]{\textwidth} 
+%         \vspace*{\fill} % Add space above the content to push it down
+%         \centering
+%         \gamepd
+%         \vspace*{\fill}
+%         \end{minipage}
+%     }
+
+%   \onslide<2->{\fat{Feasible Payoffs:} Aim for payoff of -1 each round via mutual cooperation, avoiding -3 from mutual defection.}
+  
+%   \onslide<3->{\fat{Strategy:} Employ "Tit for Tat" -- start with cooperation, then mirror the other's previous action.}
+  
+%   \onslide<4->{\fat{Enforceability:} Defection leads to future punishment, making cooperation the rational long-term strategy.}
+  
+%   \onslide<5->{\fat{Discount Factor:} High \( \gamma \) close to 1 encourages sustaining cooperation for long-term benefit, given the threat of future punishment.}
+    
+%   \onslide<7->{\fat{Conclusion:} Folk Theorem suggests with high \( \gamma \), any cooperative payoffs can be sustained against one-shot Nash equilibrium due to the incentivizing threat of future punishment.}
+% \end{frame}
+
+\begin{frame}{\(\epsilon\)-Nash Equilibrium}
+
+    Exact Nash equilibria are difficult to compute: 
+
+    \blist
+        \item In settings with more than two players, action probabilities may be irrational numbers
+        \item Exact Nash equilibria are often computationally too expensive (more on slide 31)
+        \item We can relax the conditions by requiring that no agent can improve its expected return by more than some amount $\epsilon > 0$
+        \item In a general-sum game with n agent, a joint policy $\pi$ is an $\epsilon$-Nash equilibrium for $\epsilon > 0$ if:
+    \elist
+    \vspace{0pt}
+    \begin{equation*}
+        \forall i, \pi_{i}': U_{i}(\pi_{i}', \pi_{-i})-\epsilon \le U_i(\pi)
+    \end{equation*}
+
+\end{frame}
+
+\begin{frame}{$\epsilon$-Nash Equilibrium can be far from Nash Equilibrium}
+
+    \centering
+    \begin{tabular}[b]{c|c|c}
+    & C & D \\
+    \hline
+    A & 100,100 & 0,0 \\
+    \hline
+    B & 1,2 & 1,1 \\
+    \end{tabular}
+    \vspace{10pt}
+    
+    \blist
+        \item Unique Nash equilibrium at A, C
+        \item \(\epsilon\)-Nash equilibrium when \(\epsilon = 1\) at B, D and A, C
+        \item \(\epsilon\)-Nash equilibrium may not be a good approximation for the true Nash equilibrium
+        \item Returns under $\epsilon-$Nash equilibrium can differ greatly from returns under the Nash equilibrium
+    \elist
+\end{frame}
+
+\begin{frame}{Correlated Equilibrium}
+
+    We have previously assumed that the agent's policies are probabilistically independent, which can limit expected returns.
+
+    \blist
+        \item \fat{Correlated equilibria}, allow for correlated policies
+        \item \(\pi_c\) is a central policy that provides a probability distribution across all agents' actions
+        \item Agents can follow action 'recommendations' $\pi_c(a)$ or deviate by choosing another action, represented by action modifier $\xi_i$
+        \item then a \fat{correlated equilibrium} can be defined as:
+    \elist
+    \vspace{0pt}
+    \begin{equation*}
+        \sum_{a \in A}\pi_c(a)\mathcal{R}_i(\langle\xi_i(a_i), a_{-i}\rangle) \le \sum_{a \in A}\pi_c(a)\mathcal{R}_i(a)
+    \end{equation*}
+
+    \blist
+     \item Nash equilibria are a special case of correlated equilibria 
+    \elist
+    
+\end{frame}
+
+\begin{frame}[t]{Correlated Equilibrium Chicken Game}
+
+\vspace{10pt}
+
+\centering
+\gamechicken 
+
+\begin{flushleft}
+\only<1>{Non-Correlated Nash Equilibrium:}
+\only<2>{Correlated Nash Equilibrium:}
+
+    \only<1>{
+    \blist
+        \item Deterministic: $\pi_i(S) = 1, \pi_j(S) = 0 \to (7, 2)$ and $\pi_i(S) = 0, \pi_j(S)= 1 \to (2, 7)$  
+        \item Probabilistic: $\pi_i(S) = \frac{1}{3}, \pi_j(S) = \frac{1}{3} \to \approx (4.66, 4.66)$
+    \elist
+    }
+    
+    \only<2>{
+    \blist
+        \item \(\pi_c(L, L) = \pi_c(S, L) = \pi_c(L, S) = \frac{1}{3}\) and \(\pi_c(S,S) = 0\)
+        \item Expected return $=7 \cdot \frac{1}{3} + 2 \cdot \frac{1}{3} + 6 \cdot \frac{1}{3} = 5$
+        \item Assuming knowledge of $\pi_c$, if agent $i$ receives recommendation $L$ they know agent $j$ will choose either $S$ or $L$ with probability $0.5$ 
+        \item Thus expected return is $0.5 \cdot 6 + 0.5 \cdot 2 = 4$, which is greater than deviating from the action where the agent $i$  has an expected return $0.5 \cdot 0 + 0.5 \cdot 7 = 3.5$
+    \elist
+    }
+\end{flushleft}
+
+\end{frame}
+
+\begin{frame}{Coarse Correlated Equilibrium}
+
+\fat{Coarse} correlated equilibria are more general than correlated equilibria where the action modifier \(\xi_i\) is not conditioned on the recommended action given by \(\pi_c\).
+
+\blist
+    \item In correlated equilibrium \(\xi_i: A_i \to A_i\), such that it takes the recommended action and provides an alternative action
+    \item Coarse correlated equilibrium \(\xi_i\) is a constant action
+    \item In other words the agent needs to choose to deviate from the recommended action before seeing it
+    \item The coarse correlated equilibrium plays an important role in no-regret learning discussed in later slides
+\elist
+    
+\end{frame}
+
+\begin{frame}{Correlated Equilibrium via Linear Programming}
+
+Similar to a minimax we can solve for correlated equilibria using a linear program for each agent \(i\):
+\vspace{2pt}
+\begin{align*}
+\text{maximise} \quad & \sum_{a \in A} \sum_{i \in I} x_a \mathcal{R}_i(a) \\
+\text{subject to} \quad & \sum_{\substack{a \in A \\ a_i=a'_i}} x_a \mathcal{R}_i(a) \geq \sum_{\substack{a \in A \\ a_i=a''_i}} x_a \mathcal{R}_i(a'', a_{-i}) & \forall i \in I, a'_i, a''_i \in A_i \\
+& x_a \geq 0 & \forall a \in A \\
+& \sum_{a \in A} x_a = 1
+\end{align*}
+
+\blist
+    \item The constraint ensures that no agent can increase their return by deviating from the action \(a_{i}'\) sampled under the joint policy \(\pi(a) = x_a\), to some other action \(a_{i}'\)
+\elist
+\end{frame}
+
+\begin{frame}{Shortcomings of Equilibrium Solutions}
+
+Equilibrium solutions have been adopted as standard solution concepts in MARL but have limitations.
+    
+  \begin{itemize}
+    \item<2-> \fat{Sub-optimality:}
+      \begin{itemize}
+        \item Nash equilibria do not always maximize expected returns
+        \item E.g., In Prisoner’s Dilemma, (D,D) is Nash but (C,C) yields higher returns
+      \end{itemize}
+    \item<3-> \fat{Non-uniqueness:}
+      \begin{itemize}
+        \item There can be multiple (even infinite) equilibria, each with different expected returns
+      \end{itemize}
+      \item<4-> \fat{Incompleteness:}
+      \begin{itemize}
+        \item Equilibria for sequential games don't specify actions for off-equilibrium paths i.e. paths not specified by equilibrium policy \(\text{Pr}(\hat{h}|\pi) = 0\)
+        \item If there is a temporary disturbance that leads to an \fat{off-equilibrium} path, the equilibrium policy \(\pi\) does not specify actions to return to a \fat{on-equilibrium} path
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\section{Refinement Concepts}
+
+\begin{frame}{Pareto Optimality}
+
+ To address some of these limitations, we can add additional solution requirements such as \fat{Pareto optimality}. A joint policy \(\pi\) is \fat{Pareto-optimal} if it is not \fat{Pareto-dominated} by any other joint policy.
+
+A joint policy \(\pi\) is \fat{Pareto-dominated} by another policy \(\pi'\) if
+ \begin{equation*}
+     \forall i: U_i(\pi') \geq U_i(\pi) \quad \text{and} \quad \exists i: U_i(\pi') > U_i(\pi).
+ \end{equation*}
+
+\begin{intuitionbox}
+    A joint policy is \fat{Pareto-optimal} if there is no other joint policy that improves the expected return for at least one agent without reducing the expected return for any other agent.
+\end{intuitionbox}
+\end{frame}
+
+\begin{frame}{Pareto-Optimal Solution in the Chicken Game}
+
+\begin{columns}
+    \begin{column}{0.5\textwidth}
+        \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth, height = 0.8\textheight, keepaspectratio]{images/chapter_4/chicken-po-frontier.pdf}
+    \end{figure}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \centering
+        \vspace{10pt}
+        \gamechicken 
+        \vspace{10pt}
+        \blist
+            \item The figure shows the discretized space of joint policies for the chicken matrix game
+            \item Each blue dot represents the expected joint return obtained by a joint policy
+        \elist
+    \end{column}
+\end{columns}
+
+\end{frame}
+
+\begin{frame}{Social Welfare and Fairness}
+
+To further constrain the space of desirable solutions, we can consider social welfare and fairness concepts. 
+
+\fat{Welfare optimality:}
+\vspace{1pt}
+\begin{equation*}
+    W(\pi) = \sum_{i \in I}U_i(\pi)
+\end{equation*}
+
+\blist
+    \item A joint policy \(\pi\) is \fat{welfare-optimal} if \(\pi \in \argmax_{\pi'}W(\pi')\)
+\elist
+
+\fat{Fairness optimality:}
+\vspace{1pt}
+\begin{equation*}
+    F(\pi) = \prod_{i \in I} U_i (\pi)
+\end{equation*}
+
+\blist
+    \item A joint policy $\pi$ is \fat{fairness-optimal} if $\pi \in \argmax_{\pi'}F(\pi')$
+\elist
+
+\end{frame}
+
+\begin{frame}{Fairness in Battle of the Sexes}
+
+\begin{columns}
+    \begin{column}{0.5\textwidth}
+        \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth, height = 0.8\textheight, keepaspectratio]{images/chapter_4/battlesexes-po-frontier.pdf}
+    \end{figure}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \centering
+        % \fat{Battle of the sexes}
+        \vspace{10pt}
+        
+        \gamebattle
+        \vspace{10pt}
+        
+        \blist
+            \item 2 agents agreeing to meet at either location A or B, with each agent having a preference for one or the other location
+            \item A, A and B, B are both Nash equilibria and fairness optimal
+            \item In the chicken game, there is only 1 Pareto optimal and fairness optimal solution
+        \elist
+    \end{column}
+\end{columns}
+    
+\end{frame}
+
+\begin{frame}{No Regret}
+
+\fat{Regret} measures the difference between the rewards an agent received versus the rewards it would have received by choosing a different action in past episodes. 
+\blist
+\item In non-repeated normal-form games (assuming actions of other agents are fixed) \fat{regret}, is:
+\elist
+\vspace{0pt}
+\begin{equation*}
+    Regret_i^{z} = \max_{a_i \in A_i}\sum_{e = 1}^z\left[\mathcal{R}(\langle a_i, a_{-i}^{e}\rangle) - \mathcal{R}_i (a^e) \right]
+\end{equation*}
+
+\blist
+    \item Let \(a^e\) denote the joint action in episode \(e = 1, ...., z\)
+    \item There is no regret if regret is at most 0 as $z \to \infty$ 
+    \item  In general-sum games with n agents, the agents have no regret if:
+\elist
+\vspace{1pt}
+ \[
+ \forall i: \lim_{z \to \infty} \frac{1}{z}Regret_{i}^{z} \le 0
+ \]
+
+\end{frame}
+
+\begin{frame}{No Regret in Prisoners Dilemma}
+
+\begin{figure}[t]
+	\centering
+	\setstretch{1.1}
+	\begin{tabular}{@{} l c c c c c c c c c c @{}}
+		\toprule
+		Episode $e$ \hspace{5em} 					  & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+		\midrule
+		Action $a^e_1$  			 						 &  C &  C & D  & C  &  D  & D  &  C & D  & D & D \\
+		Action $a^e_2$  			 						&  C &  D & C  & D  &  D  & D  &  C & C  & D & C \\
+		Reward $\mathcal{R}_1(a^e)$						 & -1 & -5 & 0  & -5 & -3 & -3 & -1 & 0 & -3 & 0 \\
+		\midrule
+		Reward $\mathcal{R}(\langle C, a^e_2\rangle)$	& -1 & -5 & -1 & -5 & -5 & -5 & -1 & -1 & -5 & -1 \\
+		Reward $\mathcal{R}(\langle D, a^e_2\rangle)$	&  0 & -3 & 0 & -3  & -3 & -3 & 0  & 0 & -3 & 0 \\
+% RPS
+%		Agent 1  & R & P & S & P & S & R & P & S & S & P \\
+%		Agent 2  & P & R & R & S & P & R & S & P & R & P \\
+%		Reward $\rew_1^t$ & -1 & +1 & -1 & -1 & +1 & 0 & -1 & +1 & -1 & 0 \\
+		\bottomrule
+	\end{tabular}
+ \end{figure}
+
+ \blist
+    \item Agent 1 receives total reward \(-21\), always playing D would have resulted \(-15\) 
+    \item Thus, \(\text{Regret}_{1}^{10} = -15 + 21 = 6\)
+ \elist
+    
+\end{frame}
+
+\begin{frame}{Generalizing No-Regret to Stochastic Games and POSGs}
+
+For each agent \(i\) we introduce:
+
+\blist
+    \item A finite space of policies $\Pi_i$  from which agent $i$ can select a policy
+    \item Let $\pi^e$ denote the joint policy from episode $e = 1, ..., z$ with $\pi_i^e \in \Pi_i$ for all $i \in I$
+    \item Agent $i$'s regret for not having chosen the best policy across episodes is then defined as
+\elist
+\vspace{2pt}
+\[
+Regret_i^{z} = \max_{\pi_i \in \Pi_i}\sum_{e = 1}^z\left[U_i(\langle \pi_i, \pi_{-i}^{e}\rangle) - U_i (\pi^e) \right]
+\]
+
+\begin{notebox}
+    This equation is equivalent to the previous equation for normal-form games if each $\Pi_i$ is a set of \fat{deterministic} policies corresponding to an action $a_i \in A_i$ 
+\end{notebox}
+
+\end{frame}
+
+\section{Complexity of Computing Equilibria}
+
+\begin{frame}{Complexity of computing equilibria}
+  Algorithmic game theory evaluates the computational difficulty of finding certain game solutions.
+  \begin{itemize}
+    \item Normal-form games provide a complexity lower bound for more complex games.
+    \item Two-agent zero-sum games have \fat{polynomial-time} minimax solutions via linear programming
+    \item Correlated equilibria in non-repeated normal-form general-sum games can also be computed in \fat{polynomial time}
+    \item Nash equilibria computation is more complex due to the independence assumption  and cannot be done using linear programming
+    \item Finding Nash equilibria (NASH problem) is a \fat{total search} problem and has been proven to be\fat{ PPAD complete}, one other PPAD complete problem is the END-OF-LINE Problem
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{END-OF-LINE PPAD Complexity}
+
+    The END-OF-LINE problem is PPAD complete, meaning all other problems in PPAD, including the NASH problem, can be reduced to it
+        % \elist
+
+        END-OF-LINE Definition: Let \( G(k) = (V, E) \) be a directed graph consisting of
+        \begin{itemize}
+        \item a finite set \( V \) containing \( 2^k \) nodes (each node is represented as a bit-string of length \( k \))
+        \item a finite set \( E = \{ (a, b) \mid a, b \in V \} \) of directed edges (from node \( a \) to node \( b \), for \( a, b \in V \)) such that:
+        \begin{itemize}
+        \item if \( (a, b) \in E \) then \( \exists a' \neq a: (a', b) \in E \) and \( \nexists b' \neq b: (a, b') \in E \)
+        \end{itemize}
+        \item The goal is to find a node \(e \neq s\) in this graph using two functions:
+            \begin{itemize}
+                \item Parent(\(v\)) and Child(\(v\)), which return the parent or child node of v, respectively
+            \end{itemize}
+        \end{itemize}
+        
+\end{frame}
+
+\begin{frame}{END-OF-LINE - Continued}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.4\textwidth, height=0.4\textheight, keepaspectratio]{images/chapter_4/PPAD.pdf}
+\end{figure}
+
+\blist
+    \item The PPAD "parity argument" ensures the existence of a sink node corresponding to a given source node (in grey)
+    \item If a source node is given we know node \(e\) must exist
+    \item To find \(e\) we can start at source and repeatedly call Child(v) until we find \(e\)
+    \item As the graph scales \(2^k\) this means finding \(e\) may require \fat{exponential time} in the worst case.
+\elist
+    
+\end{frame}
+
+\begin{frame}{Complexity Considerations for MARL}
+
+\blist
+    \item \fat{Reduction to NASH:} Computing Brouwer fixed points and other PPAD problems are reducible to the NASH problem, indicating there are no known efficient (polynomial time) algorithms for solving NASH
+    
+    \item \fat{Approximate \(\epsilon\)-Nash Equilibrium:} PPAD-completeness holds for both approximate solutions (\(\epsilon > 0\)) and exact solutions (\(\epsilon = 0\)), with approximations often necessary due to potentially irrational equilibria
+    
+    \item \fat{Implications for MARL:} MARL algorithms are unlikely to be a silver bullet for finding Nash equilibria efficiently
+    
+    \item \fat{Research Focus in MARL:} Research often targets identifying exploitable structures in certain game types, but MARL may still require \fat{exponential} time when such structures are unavailable.
+\elist
+    
+\end{frame}
+
+\begin{frame}{Summary}
+
+\fat{We covered:}
+    \blist
+        \item Best Response and minimax
+        \item Equilibrium solutions
+        \item Additional solution criteria
+        \item Complexity of finding Nash equilibria
+    \elist
+
+\fat{Next we'll cover:}
+
+    \blist
+        \item MARL in games
+    \elist
+    
+\end{frame}
+
+\end{document}
+

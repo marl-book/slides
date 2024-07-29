@@ -1,0 +1,572 @@
+% !TEX program = xelatex
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{preamble.tex}
+\leoslide
+
+\subtitle{Games: Models of Multi-Agent Interaction}
+
+\begin{document}
+\maketitle
+
+\introslide
+
+\begin{frame}{\outline}
+    \vspace{10pt}
+    \fat{Part 1: Game Models} 
+    \vspace{5pt}
+    \blist
+        \item Normal-form games
+        \item Stochastic games
+        \item Partially observable stochastic games  
+    \elist
+    \fat{Part 2: Modeling Communication} 
+    \vspace{5pt}
+    \blist
+        \item Communication as an action
+        \item Communication with observation functions
+    \elist
+
+    \fat{Part 3: Assumptions}
+    \blist
+        \item Game theory vs MARL assumptions
+    \elist
+\end{frame}
+
+\section{Game Models}
+
+\begin{frame}{Hierarchy of Games}
+
+    % \begin{columns}
+    % \begin{column}{0.3\textwidth}
+    % Hierarchy from most to least general
+    % \begin{enumerate}
+    %     \item Partially observable stochastic Games (POSG)
+    %     \item Stochastic games
+    %     \item Normal-form games 
+    % \end{enumerate}
+    % \end{column}
+    % \begin{column}{0.7\textwidth}
+    \begin{figure}
+        \centering
+        \includegraphics{images/chapter_3/game-hierarchy.pdf}
+        \label{fig:enter-label}
+    \end{figure}
+    % \end{column}
+    % \end{columns}
+\end{frame}
+
+
+\begin{frame}{Normal-Form Games}
+
+    \fat{Normal-form} games define a \fat{single} interaction between two or more agents, providing a simple kernel for more general games to build upon. 
+    \vspace{5pt}
+    
+    \fat{Normal-form} games are defined as a 3 tuple \((I, \{A_i\}_{i \in I}, \{\mathcal{R}_i\}_{i \in I})\):
+    \vspace{10pt}
+    \blist
+        \item $I$ is a finite set of agents \(I = \{1, ..., n\}\)
+        \item For each agent \(i \in I\):
+        \blist
+            \item \(A_i\) is a finite set of actions
+            \item \(\mathcal{R}_i\) is the reward function \(\mathcal{R}_i: A \to \mathbb{R}\) where \(A = A_1 \times ... \times A_n\) (set of \fat{joint} actions). 
+        \elist
+    \elist
+    
+\end{frame}
+
+
+\begin{frame}{Normal-Form Game Process}
+
+    In a normal-form game, there are \fat{no time steps or states}. Agents choose an action and observe a reward.
+    \vspace{10pt}
+    \pause
+    
+    \visible<1->The game proceeds as follows:
+    \pause
+    
+    \begin{enumerate}
+        \item<2-> Each agent samples an action \(a_i \in A_i\) with probability \(\pi_i(a_i)\)
+        \pause
+        \item<3-> The resulting actions from all agents form a \fat{joint action}, \(a = (a_1, ... , a_n)\)
+        \pause
+        \item<4-> Each agent receives a reward based on their \fat{individual} reward function and the \fat{joint action}, \(r_i = \mathcal{R}_i(a)\)
+    \end{enumerate}
+    
+\end{frame}
+
+\begin{frame}{Classes of Games}
+
+    Games can be classified based on the relationship between the agents' reward functions. 
+
+    \blist
+        \item In \fat{zero-sum games}, the sum of the agents' reward is always 0\\
+        i.e. \(\sum_{i \in I} \mathcal{R}_{i} (a) = 0, \forall a \in A\)
+        \item In \fat{common-reward} games, all agents receive the same reward 
+        (\(R_i = R_j ; \forall i, j \in I\))
+        \item In \fat{general-sum} games, there are no restrictions on the relationship between reward functions. 
+    \elist
+    
+\end{frame}
+
+\begin{frame}{Matrix Games}
+
+     Normal-from games with \fat{2} agents are also called \fat{matrix games} because they can be represented using reward matrices.
+    \vspace{5pt} 
+    
+    \begin{figure}[ht]
+        \centering
+        \begin{minipage}[b]{0.32\textwidth}
+            \centering
+            \gamerps
+            \caption{1. Rock-Paper-Scissors}
+
+            \onslide<2->{zero-sum} % Appears beneath the first minipage
+
+        \end{minipage}\hfill
+        \begin{minipage}[b]{0.32\textwidth}
+            \centering
+            \gamecoord
+            \caption{2. Coordination Game}
+            % \setcounter{enumi}{1} % Continue enumeration
+            \onslide<3->{common-reward} % Appears beneath the second minipage
+        \end{minipage}\hfill
+        \begin{minipage}[b]{0.32\textwidth}
+            \centering
+            \gamepd
+            \caption{3. Prisoner's Dilemma}
+            \label{fig:game-pd}
+            \onslide<4->{general-sum} % Appears beneath the third minipage
+        \end{minipage}
+        \label{fig:matrix-games}
+        \vspace{5pt}
+        \begin{flushleft}
+            \visible<5->{Note general sum is a \fat{superset} class for all games}
+        \end{flushleft}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Repeated Normal-Form Games}
+
+\begin{figure}
+    \centering
+    \includegraphics{images/chapter_3/normal_form_hierarchy.pdf}
+    % \caption{Caption}
+    % \label{fig:enter-label}
+\end{figure}
+    
+\end{frame}
+
+
+\begin{frame}{Repeated Normal-Form Games}
+
+To extend normal-form games to \fat{sequential} multi-agent interaction, we can repeat the same game over \(T\) timesteps. 
+
+    \begin{columns}
+    \begin{column}{0.4\linewidth}
+    \begin{figure}
+        \centering
+        \includegraphics{images/chapter_3/game-models-mg.pdf}
+        \label{fig:enter-label}
+    \end{figure}
+    \end{column}
+
+    \begin{column}{0.6\linewidth}
+
+    \blist
+        \item At each time step \(t\) an agent $i$ samples an action \(a^{t}_{i}\)
+        \item The policy is now conditioned on a \fat{joint-action} history \(\pi_i(a_{i}^{t}|h^t)\) where \(h^t = (a^o, ..., a^{t-1})\)
+        \item In special cases $h^t$ contains $n$ last joint actions. E.g. in a tit-for-tat strategy (Axelrod and Hamilton 1981), the policy is conditioned only on \(a^{t-1}\)
+    \elist
+        
+    \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Stochastic Games}
+
+\begin{figure}
+    \centering
+    \includegraphics{images/chapter_3/stochastic_games_hierarchy.pdf}
+    % \caption{Caption}
+    % \label{fig:enter-label}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Stochastic Games}
+
+    Stochastic games introduce the notion of \fat{states} and are defined as a 6 tuple \((I, S, \{A_i\}_{i \in I}, \{\mathcal{R}_i\}_{i \in I}, \mathcal{T}, \mu)\)
+    \vspace{10pt}
+    \blist
+        \item $I$ is a finite set of agents
+        \item $S$ is a finite set of states with subset of terminal states $\bar{S} \subset S$
+        \item For each agent $i \in I$:
+        \blist
+            \item $A_i$ is a set finite set of actions
+            \item $\mathcal{R}_i$ is the reward function $\mathcal{R}_i : S \times A \times S \to \mathbb{R}$ where $A$ is the set of \fat{joint} actions $A = A_1 \times ... \times A_n$
+        \elist
+        \item $\mu$ is the initial state distribution $\mu: S \to [0, 1]$
+        \item $\mathcal{T}$ is the state transition function $\mathcal{T}: S \times A \times S \to [0, 1]$
+    \elist
+
+\end{frame}
+
+
+\begin{frame}{Stochastic Games - Continued}
+    
+    \begin{columns}
+    \begin{column}{0.5\linewidth}
+    \begin{figure}
+        \centering
+        \includegraphics{images/chapter_3/game-models-sg.pdf}
+        \label{fig:enter-label}
+    \end{figure}
+    \end{column}
+    \vspace{10pt}
+    \begin{column}{0.5\linewidth}
+
+    \blist
+        \item Each \fat{state} can be viewed as a \fat{non-repeated normal-form game}
+        \item Stochastic games can also be classified into: zero-sum, common-reward or general-sum
+        \item The figure on the left shows a general-sum case 
+    \elist
+        
+    \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Stochastic Game Process}
+
+\begin{enumerate}
+    \item<1-> Initial state $s_0 \in S$ is samples from $\mu$.
+    \item<2-> At time $t$ each agent $i \in I$ observes the current state $s^{t} \in S$ and chooses an action $a^{t}_i \in A_i$ with probability $\pi(a^{t}_i|h^{t})$ 
+    \vspace{2pt}
+    \blist
+        \item<3-> $h^t = (s^0, a^0, s^1, a^1, ......, s^t)$ is the \fat{state-action history} containing the current state $s^t$ and past \fat{joint} actions and states
+    \elist
+    \vspace{2pt}
+    \item<4-> Given $s^t$ and $a^t$, the game transitions into the next state $s^{t+1} \in S$ with probability $\mathcal{T}(s^{t+1}|s^t, a^t)$
+    \item<5->  Each agent receives a reward according to their reward function $r^{t}_{i} = \mathcal{R}_{i} (s^t, a^t, s^{t+1})$ 
+    \item<6-> These steps are repeated until a terminal state $s^t \in \bar{S}$ is reached or a maximum number of T time steps is completed
+\end{enumerate}
+\end{frame}
+
+
+
+\begin{frame}{Stochastic Game Level-Based Foraging Example}
+
+\begin{columns}
+    \begin{column}{0.45\textwidth}
+    \begin{figure}
+        \centering
+        \includegraphics[width = 0.8\linewidth, keepaspectratio]{images/environments/lbf/lbf-8x8-2p-3f.png}
+        \label{fig:enter-label}
+    \end{figure}
+    \end{column}
+
+    \begin{column}{0.55\textwidth}
+    \vspace{5pt}
+    \blist
+        \item \(s \in S\): vector of x-y positions for agents/items, binary collection flags, levels for agents/items
+        \item \(a_i \in A_i\): move in four directions, collect item, or no operation (noop)
+        \item \(\mathcal{T}\): joint actions update state, e.g., two agents collecting an item switch its flag
+        \item \(\mathcal{R}\):
+            \blist
+                \item common-reward: +1 reward for any item collected by any agent
+                \item general-sum: +1 reward only for agents directly involved in item collection
+            \elist
+    \elist
+    \end{column}
+
+\end{columns}
+\end{frame}
+
+\begin{frame}{POSG}
+
+\begin{figure}
+    \centering
+    \includegraphics{images/chapter_3/POSG_hierarchy.pdf}
+    % \caption{Caption}
+    % \label{fig:enter-label}
+\end{figure}
+    
+\end{frame}
+
+\begin{frame}{Partially Observable Stochastic Games (POSG)}
+    \vspace{5pt}
+    \blist
+        \item At the top of the game model hierarchy, the most \fat{general} model is the POSG
+        \item POSGs represent complex decision processes with \fat{incomplete information}
+        \item Unlike in stochastic games, agents receive \fat{observations} providing \fat{incomplete information} about the state and agents' actions
+        \item POSGs apply to scenarios where agents have limited sensing capabilities.
+        \blist
+            \item Autonomous driving
+            \item Strategic games (e.g. card games) with private, hidden information
+        \elist
+    \elist
+    
+\end{frame}
+
+\begin{frame}{POSG Definition}
+
+POSG is defined in the same way stochastic games are, with two additions. Thus it is defined as a 8 tuple \((I, S, \{A_i\}_{i \in I}, \{\mathcal{R}_i\}_{i \in I}, \mathcal{T}, \mu, \e{\{O_{i}\}_{i \in I}, \{\mathcal{O}_{i}\}_{i \in I}})\)
+\vspace{5pt}
+
+\begin{columns}
+    \begin{column}{0.5\textwidth}
+    \begin{figure}
+        \centering
+        \includegraphics[width = 0.9\linewidth, keepaspectratio]{images/chapter_3/game-models-posg.pdf}
+    \end{figure}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        For each agent \(i\) we additionally define:
+        \blist
+            \item a finite set of observation \(O_{i}\)
+            \item  an observation function $\{\mathcal{O}_{i}\}_{i \in I}$ such that $\mathcal{O}_i: A \times S \times O_i \to [0, 1]$ and $\forall a \in A, s \in S: \sum_{o_i \in O_i} \mathcal{O}_i (a, s, o_i) = 1$
+        \elist
+    \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{POSG Process}
+
+\begin{enumerate}
+    \item<1-> Initial state $s^0$ sampled from $\mu(s)$
+    \item<2-> At each $t$ every agent $i$ receives an \fat{observation} $o^{t}_{i} \in O_i$, with probability given by the observation function $\mathcal{O}_i(o^{t}|s^t, a^{t-1})$
+    \item<3-> Each agent then chooses an action $a^{t}_{i}$ based on its policy $\pi_{i}$, which is conditioned on the agent's observation history, $h_{i} = (o^{0}_{i}, ..., o_{i}^{t})$. All agents' actions give the joint action $a^t = (a^{t}_{1}, ..., a^{t}_n)$
+    \item<4-> Given the joint action, the environment transitions into the next state $s^{t+1}$ with probability $\mathcal{T}(s^{t+1}|s^t, a^t)$ and each agent receives a reward based on its reward function $r^{t}_{i} = \mathcal{R}_{i}(s^t, a^t, s^{t+1})$
+    \item<5-> This is done until a terminating state $s^{t} \in \bar{S}$ is reached or a maximum number of time steps is completed
+\end{enumerate}
+    
+\end{frame}
+
+\begin{frame}{The Observation Function}
+
+The observation function in POSG can represent diverse observability conditions. For example:
+\blist
+    \item modeling noise by adding uncertainty in the possible observation
+    \item to limit the visual region of agents (see LBF example)
+\elist
+
+\begin{columns}
+    \begin{column}{0.5\textwidth}
+    \begin{figure}
+        \centering
+        \includegraphics[width = 0.8\linewidth, keepaspectratio]{images/environments/lbf/foraging_po.png}
+        % \caption{Caption}
+        % \label{fig:enter-label}
+    \end{figure}
+        
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \blist 
+
+            \item Here, the agent has access to a subset of joint action and states
+            \item \(o^{t}_{i} = (\bar{s}^t, \bar{a}^t)\) where \(\bar{s}^t \subset s^t, \bar{a}^t \subset a^t\)
+        \elist
+    \end{column}
+\end{columns}    
+\end{frame}
+
+\begin{frame}{Belief States}
+
+    In partially observable settings, it becomes more challenging to infer optimal actions. For example:
+
+    \begin{columns}
+    \begin{column}{0.6\textwidth}
+    \vspace{10pt}
+        \blist 
+            \item Optimal action for agent 1 is to move left towards level 1 apple
+            \item But level 1 apple is not directly observable 
+            \item Agent 1 can hold a \fat{belief states} \(b_{i}^{t}\), providing a probability distribution over possible state \(s \in S\)
+            \item Agent 1 might have seen the level-1 apple previously and can thus 'remember' its location
+        \elist  
+    \end{column}
+    \begin{column}{0.4\textwidth}
+    \begin{figure}
+        \centering
+        \includegraphics[width = \linewidth]{images/environments/lbf/foraging_po.png}
+        % \caption{Caption}
+        % \label{fig:enter-label}
+    \end{figure}
+    \end{column}
+    \end{columns}   
+\end{frame}
+
+\begin{frame}[t]{Single Agent Belief Update}
+
+To simplify, let's consider the single-agent perspective:
+
+\blist
+    \item The initial belief state is given by $b_{i}^0 = \mu$
+    \item After taking action \(a_{i}^t\) and observing \(o^{t+1}_i\), the belief state \(b_{i}^t \) is updated to \(b_{i}^{t+1} \) using a Bayesian update:
+\elist
+\vspace{-1.0em}
+
+\visible<1->{
+    \[
+        b_{i}^{t+1}(s') \propto \sum_{s \in S} b_{i}^{t}(s) \mathcal{T}(s'|s, a^{t}_i) \mathcal{O}_i (o^{t+1}_{i}|a^{t}_{i}, s')
+    \]
+}
+\vspace{-1.0em}
+
+\visible<2->{
+    In MARL this type of update is typically \fat{unfeasible}:
+    \blist
+        \item High-dimensional state spaces make storage and updates of beliefs intractable
+        \item In MARL for POSG, agents assumed not to know $(S, \mathcal{T}, \mathcal{O}_i)$
+        \item Deep learning can be used to approximate state information (see later lectures)
+    \elist
+}
+
+\end{frame}
+
+\section{Modeling Communication}
+
+\begin{frame}{Modeling Communication}
+
+\begin{columns}
+\begin{column}{0.4\textwidth}
+    \begin{figure}
+        \centering
+        \includegraphics[width = \linewidth]{images/chapter_3/communication_example.pdf}
+        % \caption{Caption}
+        % \label{fig:enter-label}
+    \end{figure}
+\end{column} 
+
+\begin{column}{0.6\textwidth}
+\blist
+    \item Using games, we can model more complex agent interactions, such as communication 
+    \item We can view communication as a type of action that other agents can observe without affecting the state of the environment
+    \item Agents learn communication meanings through trials and observations, identical to environment actions
+    \item This can lead to the evolution of a shared language or protocol
+\elist
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Communication Actions}
+
+To model communication, we can extend the action set of agents:
+
+\begin{equation*}
+    A_i = X_i \times M_i
+\end{equation*}
+
+\blist
+    \item Where \(M_i\) is a set of possible messages \(\{m1, m2, m3, ...\}\) and \(X_i\) is the set of environment actions
+    \item The action \(a_i\) can thus be expressed as \((x_i, m_i) \in A_i\)
+\elist
+    
+\end{frame}
+
+\begin{frame}{Communication in Stochastic Games}
+    \blist
+        \item Agents observe the current state \( s_t \) and previous joint action \( a_{t-1} \) 
+        \item Communication action \( m_{t-1}^i \) by agent \( i \) is part of \( a_{t-1} \) and observed by all agents
+        \item State transitions are independent of the joint communication actions \( M = \times_{i \in I} M_i \)
+    \elist
+    \begin{equation*}
+        \forall s, s' \in S \forall a \in A, m \in M : T(s'|s, a) = T(s'|s, \langle(a_{1}, m_{1}), \ldots, (a_{n}, m_{n})\rangle)
+    \end{equation*}
+\end{frame}
+
+\begin{frame}{Communication in POSG}
+
+    \blist
+        \item In POSG we can use the observation function \(\mathcal{O}_i\) to model noisy or unreliable communication
+        \item We can define the observation as \(o_{i}^{t} = [\bar{s}^t, w^{t-1}_{1}, ..., w^{t-1}_{n}]\)
+        \blist
+            \item \(\bar{s}^t\) is some partial information about the state 
+            \item \(w_{j}^{t-1}\) is a message from the agent \(j\) at time step \(t-1\) which has been augmented by \(\mathcal{O}_i\)
+            \item E.g. \(w_{j}^{t-1} = f(m_{j}^{t-1})\) where \(f(m_{j}^{t-1}) = m_{j}^{t-1} + \eta\), and \(\eta\) is some random noise component.
+        \elist
+        \item You could also model $\mathcal{O}_i$ to hide messages such that $w^{t-j}_{1} = \emptyset$  if agent $i$ is too far from agent $j$
+    \elist
+    
+\end{frame}
+
+\section{Assumptions of Games}
+
+\begin{frame}{Game Theory Assumption}
+
+    \blist
+        \item  In game theory, we typically assume that all agents know all components of the game \fat{(complete knowledge games)}
+        \item Agents know all agents' \fat{action spaces and reward functions}
+        \item Knowledge of other agents' reward functions may be used for informing the agent's \fat{best response} action (we will cover this in more depth in the next lecture)
+        \item Knowledge of the transition function (\( T \)) allows for predicting state changes and \fat{planning} actions multiple steps ahead
+    \elist
+    
+\end{frame}
+
+\begin{frame}{MARL Assumptions}
+
+\blist
+    \item In MARL, we assume \fat{limited knowledge}, i.e. no knowledge of the $\mathcal{T}$ and no knowledge of other agents $\mathcal{R}$
+    \item Additional assumption can be added and specific knowledge of the game can be held\fat{ mutually} or \fat{asymmetrically }
+    \item We usually assume the \fat{number of agents to be fixed}, although recent research has looked at \textit{open} multi-agent systems, this will not be covered in these lectures 
+\elist
+
+\end{frame}
+
+\begin{frame}{Dictionary: Reinforcement Learning \(\leftrightarrow\) Game Theory}
+\centering
+
+\begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+        \fbox{
+        \begin{tabular}{ccc}
+        \fat{RL} & & \fat{GT} \\
+        \hline
+        environment & $\leftrightarrow$ & game \\
+        agent & $\leftrightarrow$ & player \\
+        reward & $\leftrightarrow$ & payoff, utility \\
+        policy & $\leftrightarrow$ & strategy \\
+        deterministic X & $\leftrightarrow$ & pure X \\
+        probabilistic X & $\leftrightarrow$ & mixed X \\
+        joint X & $\leftrightarrow$ & X profile \\
+        \end{tabular}
+        }
+        \vspace{5pt}
+        \blist
+            \item \fat{Environment/Game}: Model with actions, observations, rewards, state dynamics.
+            \item \fat{Agent/Player}: Decision-maker, possibly with specific roles.
+        \elist
+    \end{column}
+
+
+    \begin{column}{0.5\textwidth}
+        \blist
+            \item \fat{Reward/Payoff, Utility}: Scalar value received after an action
+            \item \fat{Policy/Strategy}: Assigns probabilities to actions; 'pure strategy' may refer to actions
+            \item \fat{Deterministic X/Pure X}: Assigns probability 1 to $X$ e.g. $X$ = equilibrium or policy
+            \item \fat{Probabilistic X/Mixed X}: Assigns probabilities $\leq 1$ to $X$
+            \item \fat{Joint X/X Profile}: Tuple representing collective aspects, e.g., rewards or policies
+        \elist
+    \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Summary}
+
+\fat{We covered:}
+    \blist
+        \item Game models 
+        \item Modelling agent communication
+        \item Assumptions of game models
+    \elist
+
+\fat{Next we'll cover:}
+
+    \blist
+        \item Solution concepts for games
+    \elist
+
+    
+\end{frame}
+
+
+\end{document}
+
