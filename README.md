@@ -1,8 +1,8 @@
 # Slides for the book "Multi-Agent Reinforcement Learning: Foundations and Modern Approaches"
 
-This repository contains slides for the book "Multi-Agent Reinforcement Learning: Foundations and Modern Approaches" by Stefano V. Albrecht, Filippos Christianos, and Lukas Schäfer.
+This repository contains slides for the MIT Press textbook "Multi-Agent Reinforcement Learning: Foundations and Modern Approaches" by Stefano V. Albrecht, Filippos Christianos, and Lukas Schäfer.
 
-The book can be freely accessed under this webpage: www.marl-book.com
+The book can be freely accessed on this webpage: www.marl-book.com
 
 The slides are written in LaTeX with `beamer` (for a quick introduction to beamer, see this [Overleaf Beamer quickstart guide](https://www.overleaf.com/learn/latex/Beamer) and this [five-part tutorial](https://www.overleaf.com/learn/latex/Beamer_Presentations%3A_A_Tutorial_for_Beginners_(Part_1)%E2%80%94Getting_Started)). We provide all compiled `.pdf` files for the slides, as well as the source files of all assets and `.tex` files in `/source`. We recommend compiling with `xelatex`.
 
