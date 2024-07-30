@@ -1,4 +1,4 @@
-# Slides for the book "Multi-Agent Reinforcement Learning: Foundations and Modern Approaches"
+# Slides for MIT Press textbook "Multi-Agent Reinforcement Learning: Foundations and Modern Approaches"
 
 This repository contains slides for the MIT Press textbook "Multi-Agent Reinforcement Learning: Foundations and Modern Approaches" by Stefano V. Albrecht, Filippos Christianos, and Lukas Schäfer.
 
