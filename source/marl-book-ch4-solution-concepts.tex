@@ -22,20 +22,16 @@
     
 \end{frame}
 
-\begin{frame}{}
-
-    \begin{figure}
-        \centering
+\begin{frame}{Solution Concepts for Games}
+	\begin{center}
         \includegraphics{images/chapter_4/marl-learning-problem.pdf}
-        % \caption{Caption}
-        % \label{fig:enter-label}
-    \end{figure}
-    
-    What does it mean to act optimally in a multi-agent system?
+   	\end{center}
+    	
+    What does it mean to act \e{optimally} in a multi-agent system?
 
     \blist
         \item Maximizing returns of one agent is no longer enough to determine a solution
-        \item We must consider the joint policy of all agents
+        \item We must consider the {\bf joint policy} of all agents
         \item This is less straightforward, and there are many different solution concepts
     \elist
     
@@ -149,7 +145,8 @@
     
 \end{frame}
 
-\section{Best Response}
+
+\section{Equilibrium Solution Concepts}
 
 \begin{frame}{Best Response}
 
@@ -168,8 +165,6 @@
     \elist
     
 \end{frame}
-
-\section{Equilibrium Solution Concepts}
 
 \begin{frame}{Minimax}
 
@@ -238,44 +233,48 @@ We can obtain a minimax solution for non-repeated zero-sum normal-form games by 
 
 \begin{frame}{Nash Equilibrium in Matrix Games}
 
-
-    \begin{figure}[ht]
         \centering
         \begin{minipage}[bt]{0.32\textwidth}
             \centering
             \gamepd
-            \caption{Prisoners Dilemma}
+            
+            \vspace{5pt}
+            Prisoners Dilemma
+            
             \only<2-4>{NE at D, D (-3, -3)}
         \end{minipage}\hfill
         \begin{minipage}[bt]{0.32\textwidth}
             \centering
             \gamecoord
-            \caption{Coordination Game}
+            
+            \vspace{5pt}
+            Coordination Game
+            
             \only<3-4>{Two NE's at A, A (10) and \\ B, B (10)} 
         \end{minipage}\hfill
         \begin{minipage}[bt]{0.32\textwidth}
             \centering
             \gamerps
-            \caption{Rock Paper Scissors}
+            
+            \vspace{5pt}
+            Rock Paper Scissors
+            
             \only<4>{NE is to choose actions uniformly at random with expected return 0} % Appears beneath the third minipage
         \end{minipage}
-    \end{figure}
     
     \uncover<1>{Can you identify the Nash equilibria?}
     
 
 \end{frame}
 
-\begin{frame}{Folk Theorem in Repeated Normal Form Games}
+\begin{frame}{Folk Theorem in Repeated Normal-Form Games}
 
     Folk theorems provide solutions for \fat{repeated normal-form games} showing that any \fat{set} of \fat{feasible} and \fat{enforceable} expected returns \(\hat{U}\) can be achieved by an equilibrium solution if agents are far-sighted (\(\gamma\) close to 1).
 
     \blist
         \item \(\hat{U}\) is \fat{feasible} if it can be achieved by a joint policy \(\pi\)
         \item \(\hat{U}\) is \fat{enforceable} if each \(\hat{U_i}\) is at least as great as the agent's minmax value \(v_i\)
-    \elist
-    \vspace{0pt}
-    
+    \elist    
     \begin{equation*}
         v_i = \min_{\pi_{-i}^mm}\max_{\pi_{i}^mm}U_i(\pi_{i}^mm, \pi_{-i}^mm)
     \end{equation*}
@@ -320,7 +319,6 @@ We can obtain a minimax solution for non-repeated zero-sum normal-form games by 
         \item We can relax the conditions by requiring that no agent can improve its expected return by more than some amount $\epsilon > 0$
         \item In a general-sum game with n agent, a joint policy $\pi$ is an $\epsilon$-Nash equilibrium for $\epsilon > 0$ if:
     \elist
-    \vspace{0pt}
     \begin{equation*}
         \forall i, \pi_{i}': U_{i}(\pi_{i}', \pi_{-i})-\epsilon \le U_i(\pi)
     \end{equation*}
@@ -343,7 +341,7 @@ We can obtain a minimax solution for non-repeated zero-sum normal-form games by 
         \item Unique Nash equilibrium at A, C
         \item \(\epsilon\)-Nash equilibrium when \(\epsilon = 1\) at B, D and A, C
         \item \(\epsilon\)-Nash equilibrium may not be a good approximation for the true Nash equilibrium
-        \item Returns under $\epsilon-$Nash equilibrium can differ greatly from returns under the Nash equilibrium
+        \listtab Returns under $\epsilon$-Nash equilibrium can differ greatly from returns under the Nash equilibrium
     \elist
 \end{frame}
 
@@ -352,7 +350,7 @@ We can obtain a minimax solution for non-repeated zero-sum normal-form games by 
     We have previously assumed that the agent's policies are probabilistically independent, which can limit expected returns.
 
     \blist
-        \item \fat{Correlated equilibria}, allow for correlated policies
+        \item \fat{Correlated equilibria} allow for correlated policies
         \item \(\pi_c\) is a central policy that provides a probability distribution across all agents' actions
         \item Agents can follow action 'recommendations' $\pi_c(a)$ or deviate by choosing another action, represented by action modifier $\xi_i$
         \item then a \fat{correlated equilibrium} can be defined as:
@@ -400,7 +398,7 @@ We can obtain a minimax solution for non-repeated zero-sum normal-form games by 
 
 \begin{frame}{Coarse Correlated Equilibrium}
 
-\fat{Coarse} correlated equilibria are more general than correlated equilibria where the action modifier \(\xi_i\) is not conditioned on the recommended action given by \(\pi_c\).
+\fat{Coarse correlated equilibria} are more general than correlated equilibria where the action modifier \(\xi_i\) is not conditioned on the recommended action given by \(\pi_c\).
 
 \blist
     \item In correlated equilibrium \(\xi_i: A_i \to A_i\), such that it takes the recommended action and provides an alternative action
@@ -453,9 +451,9 @@ Equilibrium solutions have been adopted as standard solution concepts in MARL bu
 
 \begin{frame}{Pareto Optimality}
 
- To address some of these limitations, we can add additional solution requirements such as \fat{Pareto optimality}. A joint policy \(\pi\) is \fat{Pareto-optimal} if it is not \fat{Pareto-dominated} by any other joint policy.
-
-A joint policy \(\pi\) is \fat{Pareto-dominated} by another policy \(\pi'\) if
+ To address some of these limitations, we can add additional solution requirements such as \fat{Pareto optimality}.
+ 
+ A joint policy \(\pi\) is \fat{Pareto-optimal} if it is not \fat{Pareto-dominated} by any other joint policy. A joint policy \(\pi\) is Pareto-dominated by another policy \(\pi'\) if
  \begin{equation*}
      \forall i: U_i(\pi') \geq U_i(\pi) \quad \text{and} \quad \exists i: U_i(\pi') > U_i(\pi).
  \end{equation*}
@@ -545,9 +543,8 @@ To further constrain the space of desirable solutions, we can consider social we
 
 \fat{Regret} measures the difference between the rewards an agent received versus the rewards it would have received by choosing a different action in past episodes. 
 \blist
-\item In non-repeated normal-form games (assuming actions of other agents are fixed) \fat{regret}, is:
+\item In non-repeated normal-form games (assuming actions of other agents are fixed) \fat{regret} is:
 \elist
-\vspace{0pt}
 \begin{equation*}
     Regret_i^{z} = \max_{a_i \in A_i}\sum_{e = 1}^z\left[\mathcal{R}(\langle a_i, a_{-i}^{e}\rangle) - \mathcal{R}_i (a^e) \right]
 \end{equation*}
@@ -603,7 +600,6 @@ For each agent \(i\) we introduce:
     \item Let $\pi^e$ denote the joint policy from episode $e = 1, ..., z$ with $\pi_i^e \in \Pi_i$ for all $i \in I$
     \item Agent $i$'s regret for not having chosen the best policy across episodes is then defined as
 \elist
-\vspace{2pt}
 \[
 Regret_i^{z} = \max_{\pi_i \in \Pi_i}\sum_{e = 1}^z\left[U_i(\langle \pi_i, \pi_{-i}^{e}\rangle) - U_i (\pi^e) \right]
 \]
@@ -617,14 +613,15 @@ Regret_i^{z} = \max_{\pi_i \in \Pi_i}\sum_{e = 1}^z\left[U_i(\langle \pi_i, \pi_
 \section{Complexity of Computing Equilibria}
 
 \begin{frame}{Complexity of computing equilibria}
-  Algorithmic game theory evaluates the computational difficulty of finding certain game solutions.
+Normal-form games provide a complexity {\it lower bound} for more complex games.
   \begin{itemize}
-    \item Normal-form games provide a complexity lower bound for more complex games.
-    \item Two-agent zero-sum games have \fat{polynomial-time} minimax solutions via linear programming
-    \item Correlated equilibria in non-repeated normal-form general-sum games can also be computed in \fat{polynomial time}
+    \item Two-agent non-repeated zero-sum games have \fat{polynomial-time} minimax solutions via linear programming
+    \item Correlated equilibria in non-repeated general-sum normal-form games can also be computed in \fat{polynomial time} via linear programming
     \item Nash equilibria computation is more complex due to the independence assumption  and cannot be done using linear programming
-    \item Finding Nash equilibria (NASH problem) is a \fat{total search} problem and has been proven to be\fat{ PPAD complete}, one other PPAD complete problem is the END-OF-LINE Problem
   \end{itemize}
+  \begin{problembox}
+ 	Finding Nash equilibria (NASH problem) is a \fat{total search} problem and has been proven to be\fat{ PPAD complete}
+  \end{problembox}
 \end{frame}
 
 \begin{frame}{END-OF-LINE PPAD Complexity}
