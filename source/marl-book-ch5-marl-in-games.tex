@@ -22,20 +22,19 @@
 \elist
 \end{frame}
 
-\section{The MARL learning framework}
+\section{MARL Learning Framework}
 
 \begin{frame}[t]{MARL Learning Process}
 
 \begin{figure}
     \centering
     \includegraphics[width=0.8\textwidth, height = 0.8\textheight, keepaspectratio]{images/chapter_5/learning-process.pdf}
-    \label{fig:enter-label}
 \end{figure}
 
 \blist
-    \item The game model defines agent interaction
-    \item Data of these interactions are collected as $\mathcal{D}^{z} = \{ h^{t_e} \mid e = 1, \ldots, z\}, z \geq 0$
-    \item A learning algorithm updates each agent's policy $\pi^{z+1} = \mathbb{L}(\mathcal{D}^{z}, \pi^{z})$
+    \item The game model defines the learning environment
+    \item Interaction data from joint policy $\pol^z$ are collected as $\mathcal{D}^{z} = \{ h^{t_e} \mid e = 1, \ldots, z\}, z \geq 0$
+    \item A learning algorithm updates the joint policy as $\pi^{z+1} = \mathbb{L}(\mathcal{D}^{z}, \pi^{z})$
     \item The learning goal is a chosen solution concept, e.g. Nash equilibrium
 \elist
     
@@ -61,12 +60,10 @@
 
 % \end{frame}
 
-\begin{frame}[t]{Game Model's and Joint Policy}
+\begin{frame}[t]{Inputs of Policies Depend on Game Model}
 
 % The chosen game model will determine what the learnt joint policy conditions on:
 
-\begin{figure}
-    \centering
     \begin{minipage}[t]{0.39\linewidth}
         % First Column
         \centering
@@ -94,23 +91,22 @@
             \textbf{Partially observable stochastic games}
         }
     \end{minipage}
-\end{figure}
 
 \end{frame}
 
 \begin{frame}{Convergence}
 
-To evaluate the learning algorithm, we typically assess whether the learnt joint policy has \fat{converged} to the optimal joint policy. 
+To evaluate the learning algorithm, we typically assess whether the learnt joint policy has \fat{converged} to an optimal joint policy:
 \vspace{0pt}
 \[
 \lim_{z \to \infty}\pi^z = \pi^*
 \]
-\vspace{-15pt}
+
 \blist
-    \item The optimal joint policy may differ depending on the chosen game solution
-    \item There may be many valid solutions, e.g., multiple Nash equilibria
-    \item In practice, we cannot collect infinite data
-    \item Learning typically stops after a predefined 'budget' (e.g. training steps) is reached or changes in the policy are below a predefined threshold
+    \item Optimal joint policies may differ depending on the solution concept
+    \item There may be many valid solutions $\Rightarrow$ e.g. multiple Nash equilibria
+    \item In practice, we cannot collect infinite data $z \to \infty$
+    \listtab Learning typically stops after a predefined 'budget' (e.g. training steps)
     % \item Alternative theoretical evaluation criteria include:
     % \begin{itemize}
     %     \item Convergence of average return
@@ -123,18 +119,23 @@ To evaluate the learning algorithm, we typically assess whether the learnt joint
 
 \begin{frame}[t]{Single-Agent RL Reductions}
 
-The simplest way to apply reinforcement learning algorithms in multi-agent settings is to reduce them to single-agent problems. 
+The simplest way to apply RL algorithms in multi-agent settings is to reduce them to single-agent problems. 
 
+\vspace{10pt}
+
+\visible<2->{
+\e{\bf Central learning:}
 \blist
-    \item We can apply single-agent RL algorithms to each agent independently
-    \begin{itemize}
-        \item This is known as \fat{independent} learning; agents do not explicitly consider each other instead they treat other agents as part of the environment
-    \end{itemize}
-    \item Alternatively, we can apply one single-agent RL to all agents centrally 
-    \begin{itemize}
-        \item This is referred to as \fat{central} learning, where a central policy is learned, providing action probability across all agents' actions
-    \end{itemize}
-\elist
+    \item Apply one single-agent RL algorithm to control all agents centrally 
+    \listtab A central policy is learned over the joint action space
+\elist}
+
+\visible<3->{
+\e{\bf Independent learning:}
+\blist
+    \item Apply single-agent RL algorithms to each agent independently
+	\listtab Agents do not explicitly consider or represent each other
+\elist}
     
 \end{frame}
 
@@ -142,13 +143,13 @@ The simplest way to apply reinforcement learning algorithms in multi-agent setti
 
 \begin{frame}{Central Learning}
 
-In the central learning framework, we learn a single central policy $\pi_c$, which receives observations of all agents and selects an action for each agent. 
+\e{Central learning:} learn a single central policy $\pi_c$ which receives observations of all agents and selects an action for each agent (i.e. joint action $(\ac_1,...,\ac_n)$). 
 
 \blist
-    \item Requires transforming the joint reward $(r_1, \ldots, r_n)$, into a single scalar reward $r$
-    \item This can be easy in some settings, e.g. in games with common rewards $r = r_i$, but difficult in zero-sum or general-sum games
-    \item Central learning does not scale well with the number of agents as the joint action space grows exponentially with the number of agents
-    \item This framework may also not be suitable in environments that require agents to act independently based on localized observations
+    \item<1-> Requires transforming the joint reward $(r_1, \ldots, r_n)$ into a single scalar reward $r$
+    \item<2-> This can be easy in some settings, e.g. in games with common rewards $r = r_i$, but difficult in zero-sum or general-sum games
+    \item<3-> Mays not scale well with the number of agents, as the joint action space may grow exponentially with the number of agents
+    \item<4-> May also not be suitable in environments that require agents to act independently based on local observations
 \elist
 \end{frame}
 
@@ -174,19 +175,18 @@ In the central learning framework, we learn a single central policy $\pi_c$, whi
 
 \begin{frame}{Independent Learning}
 
-In the independent learning framework, each agent $i$ learns its policy $\pi_i$ using only its local history of observations, treating the effects of other agents' actions as part of the environment.
+\e{Independent learning:} each agent $i$ learns its policy $\pi_i$ using only its local history of observations.
 
 \blist
-    \item From the perspective of the individual agent, the environment transition function looks like this:
+    \item From the perspective of each agent $i$, the environment transition function looks like this:
 \elist
-\vspace{5pt}
 \[
 \mathcal{T}_i(s^{t+1} | s^t, a_i) \propto \sum_{a_{-i} \in A_{-i}} \mathcal{T}(s^{t+1} | s^t, \langle a_i, a_{-i} \rangle) \prod_{j \neq i} \pi_j(a_j | s^t)
 \]
 % \vspace{5pt}
 \blist
     \item As each agent $j$'s policies are updated, the action probabilities $\pi_j$ change
-    \item From agent $i$'s perspective its transition function $\mathcal{T}_i$ thus appears to be non-stationary
+    \listtab From agent $i$'s perspective, the transition function $\mathcal{T}_i$ appears non-stationary!
 \elist
     
 \end{frame}
@@ -208,7 +208,7 @@ In the independent learning framework, each agent $i$ learns its policy $\pi_i$ 
 \ealg
 \end{frame}
 
-\begin{frame}{IQL and CQL in Level-based Foraging}
+\begin{frame}{IQL and CQL in Level-Based Foraging}
 
 \begin{columns}
     \begin{column}{0.5\textwidth}
@@ -227,7 +227,7 @@ In the independent learning framework, each agent $i$ learns its policy $\pi_i$ 
         \includegraphics[width=\textwidth,height=.8\textheight,keepaspectratio]{images/chapter_5/tabular_marl_lbf_returns_iql_cql.pdf}
         \label{fig:enter-label}
         \blist
-            \item IQL can learn more quickly as CQL needs to explore $6^2 = 36$ actions in each state
+            \item IQL can learn more quickly, as CQL needs to explore $6^2 = 36$ actions in each state
         \elist
         
     \end{column}
@@ -235,24 +235,23 @@ In the independent learning framework, each agent $i$ learns its policy $\pi_i$ 
     
 \end{frame}
 
-\section{Modes of Operation in MARL}
+\begin{frame}{Modes of Operation in MARL}
 
-\begin{frame}{Modes of Learning}
+Modes of Operation in MARL: \fat{self-play} and \fat{mixed-play}
 
-In addition to independent and central learning, there are different modes of learning algorithms. Algorithms can use \fat{self-play} or \fat{mixed-play}.
+\vspace{10pt}
 
 \fat{Self-play}:
-
 \blist
-    \item Refers to two related but distinct modes of operation in MARL, \fat{algorithm self-play} and \fat{policy self-play}
-    \item \fat{Algorithm self-play} assumes that all agents use the same learning algorithm
-    \item \fat{Policy self-play} is more literal and means that an agent's policy is trained directly against itself
+    \item \fat{Algorithm self-play:} all agents use the same learning algorithm (and parameters)
+    \item \fat{Policy self-play:} agent's policy is trained directly against itself
 \elist
 
-\fat{Mixed-play}
+\vspace{5pt}
 
+\fat{Mixed-play}
 \blist
-    \item Refers to instances where agents use different learning algorithms
+    \item Agents use different learning algorithms
     % \item Trading bots in markets that use RL are one example of a mixed-play scenario
     % \item Ad-hoc teamwork is another area of research that focuses on this setting where agents must collaborate with previously unknown agents
 \elist
@@ -261,19 +260,33 @@ In addition to independent and central learning, there are different modes of le
 
 \section{MARL Challenges}
 
-\begin{frame}[t]{MARL Challenges}
+\begin{frame}{MARL Challenges}
 
-MARL algorithms inherit issues from single-agent RL, such as:
+\small 
 
-\blist
-    \item Unknown environment dynamics
-    \item Exploration-exploitation dilemma
-    \item Non-stationarity from bootstrapping
-    \item Temporal credit assignment
-\elist
-
-In addition to this, MARL algorithms face challenges that arise from learning in a dynamic multi-agent system.
-    
+\bcol
+	\tcol{0.47}
+		\begin{custombox}{Singe-Agent RL Challenges}
+		\blist
+		    \item Unknown environment dynamics
+		    \item Exploration-exploitation dilemma
+		    \item Non-stationarity from bootstrapping
+		    \item Temporal credit assignment
+		\elist
+		\end{custombox}
+		
+	\tcol{0.5}
+		\visible<2->{
+		\begin{custombox}{Multi-Agent RL Challenges}
+		\blist
+		    \item Non-stationarity from multiple learning agents
+   		    \item Equilibrium selection
+		    \item Multi-agent credit assignment
+		    \item Scaling tom many agents
+		\elist
+		\end{custombox}
+		}
+\ecol    
 \end{frame}
 
 \begin{frame}{Non-Stationarity}
@@ -285,140 +298,143 @@ In addition to this, MARL algorithms face challenges that arise from learning in
     \item This means that the dynamics of the process do not change over time
 \end{itemize}
 
-\underline{Now $X^t$ samples the state $s^t$ at each time step $t$:}
+\pause
+
+\underline{Consider: $X^t$ samples the state $s^t$ at each time step $t$:}
 
 \begin{itemize}
-    \item In a MDP, $X^t$ is completely defined by the state transition function $\mathcal{T}(s^t|s^{t-1}, a^{t-1})$ and the agents policy $\pi$ which selects an action $a \sim \pi(.|s)$
-    \item The \textbf{Markov property} means that this property is stationary in that $s^t$ depends only on $s^{t-1}$, $a^{t-1}$ and $a^{t-1}$ depends only on  $s^{t-1}$ via $\pi(.|s^{t-1})$
-    \item In RL, the policy does, however, change over time through the learning process $\pi^{z+1} = \mathbb{L}(\mathcal{D}^z, \pi^z)$,  which leads to \fat{non-stationarity} in $X^t$
+    \item<2-> In a MDP, $X^t$ is completely defined by the state transition function $\mathcal{T}(s^t|s^{t-1}, a^{t-1})$ and the agent's policy $\pi$ which selects an action $a \sim \pi(.|s)$
+    \item<3-> If $\pi$ does not change, then this process is stationary (i.e. independent of $t$) because $s^t$ depends only on $s^{t-1}$, $a^{t-1}$ and $a^{t-1}$ depends only on  $s^{t-1}$ via $\pi(.|s^{t-1})$
+    \item<4-> However, in RL the policy does change over time through the learning $\pi^{z+1} = \mathbb{L}(\mathcal{D}^z, \pi^z)$,  which leads to \fat{non-stationarity} in $X^t$
 \end{itemize}
 
 \end{frame}
 
-\begin{frame}{Non-Stationarity in Multi-Agent Settings}
+\begin{frame}[t]{Non-Stationarity in Multi-Agent Settings}
 
-In MARL, non-stationarity is exacerbated by multiple agents changing their policies over time.
-\vspace{0pt}
-\begin{columns}
-\begin{column}{0.5\textwidth}
-    % \vspace{-5pt}
-    \begin{figure}
-        \includegraphics[width=0.8\textwidth, height = 0.8\textheight, keepaspectratio]{images/chapter_5/wolfphc_rps_own.pdf}
+In MARL, non-stationarity is exacerbated by multiple agents changing their policies!
 
-    \end{figure}
-\end{column}
+\vspace{15pt}
 
-\begin{column}{0.5\textwidth}
-\blist
-    \item $\pi^{z+1} = \mathbb{L}(\mathcal{D}^z, \pi^z)$ updates an entire joint policy $\pi^z = (\pi_1^z, ..., \pi_n^z)$
-    \item Leads the entire environment to seem non-stationarity from each agent's perspective
-    \item Can cause cyclic learning dynamics where agents co-adapt to each other's changing policies 
-    % \item Stochastic approximation conditions that ensure convergence in single-agent RL don't apply in MARL
-\elist
-\end{column}
-\end{columns}
+\bcol
+	\col{0.45}
+        \includegraphics[width=0.95\textwidth]{images/chapter_5/wolfphc_rps_own.pdf}
+
+	\col{0.45}
+		\blist
+		    \item $\pi^{z+1} = \mathbb{L}(\mathcal{D}^z, \pi^z)$ updates an {\it entire} joint policy $\pi^z = (\pi_1^z, ..., \pi_n^z)$
+		    \item Environment is non-stationary from each agent's perspective
+		    \item Can cause cyclic learning dynamics where agents co-adapt to each other's changing policies 
+		    % \item Stochastic approximation conditions that ensure convergence in single-agent RL don't apply in MARL
+		\elist
+
+\ecol
 \end{frame}
 
 \begin{frame}{Equilibrium Selection}
 
-A game might have multiple equilibrium solutions, each of which might yield different expected returns to the agents in the game. This leads to the problem of \fat{equilibrium selection}
+\e{\bf Equilibrium selection:} a game may have multiple equilibria, which can yield different expected returns to the agents.
 \vspace{5pt}
-\begin{columns}
-    \begin{column}{0.5\textwidth}
+
+\bcol
+    \col{0.5}
         \blist
-            \item Consider the stag hunt game
-            \item Two hunters choose: cooperate to hunt stag (S) or go solo for hare (H)
-            \item Nash equilibria: reward-dominant (S,S) maximizes reward, risk-dominant (H,H) minimizes risk
-            \item (S,S) requires trust; (H,H) offers a safe, lower reward
+            \item<1-> {\bf Example:} Stag Hunt matrix game
+            \item<1-> Two hunters choose: cooperate to hunt stag (S) or go solo for hare (H)
+            \item<2-> Nash equilibria: reward-dominant (S,S) maximizes reward, risk-dominant (H,H) minimizes risk
+            \item<3-> (S,S) requires trust; (H,H) offers a safe, lower reward
         \elist
-    \end{column}
-    \begin{column}{0.5\textwidth}
+
+    \col{0.5}
         \centering
         \gamestaghunt
-    \vspace{10pt}
+		\vspace{10pt}
+		\visible<4->{
         \blist
-            \item Independent Q-learning may bias towards (H,H) due to initial action uncertainty
+            \item Indep. Q-learning may bias towards (H,H) due to initial action uncertainty
             \item Early random actions can reinforce (H,H) since deviating from H is penalized if the other agent chooses H
-        \elist
-    \end{column}
-\end{columns}
+        \elist}
+
+\ecol
     
 \end{frame}
 
 \begin{frame}{Multi-Agent Credit Assignment}
 
-Credit assignment in single-agent RL refers to determining which past action contributes to receiving rewards. In MARL, determining which agent has contributed to receiving rewards is an additional challenge.
+%Credit assignment in single-agent RL refers to determining which past action contributes to receiving rewards.
+\e{\bf Multi-agent credit assignment:} which agent's actions contributed to receved rewards? \\[15pt]
 
-\begin{columns}
-    \begin{column}{0.5\textwidth}
-        \begin{figure}
+\bcol
+    \col{0.5}
             \centering
-            \includegraphics[width=0.8\textwidth, height = 0.8\textheight, keepaspectratio]{images/environments/lbf/foraging_8x12_b.png}
-        \end{figure}
-    \end{column}
-    \begin{column}{0.5\textwidth}
+            \includegraphics[width=0.85\textwidth]{images/environments/lbf/foraging_8x12_b.png}
+
+    \col{0.5}
         \blist
-            \item At time step $t$ all agents simultaneously perform \textit{collect}, each receiving reward $+1$
-            \item Whose action led to the reward?
+            \item At time step $t$ all agents perform \textit{collect}, each receiving reward $+1$
+            \item Whose actions led to the reward?
             \item The agent on the left did not contribute
-            \item For a learning agent which only observes $s^t, a^t, r^t, s^{t+1}$, disentangling the action contributions is difficult
+            \item For a learning agent that only observes $s^t, a^t, r^t, s^{t+1}$, disentangling the action contributions is difficult
         \elist
-    \end{column}
-\end{columns}
+
+\ecol
     
 \end{frame}
-\begin{frame}{Joint Actions for Addressing Multi-Agent Credit Assignment}
+\begin{frame}[t]{Joint Actions for Addressing Multi-Agent Credit Assignment}
 
 \fat{Joint actions} can help disentangle agent contributions. Consider the RPS game:
+
+\vspace{5pt}
 
 \centering
 \gamerps 
 
+\vspace{5pt}
+
 \begin{enumerate}
-    \item Agents choose actions $(a_1, a_2) = (R, S)$ with agent $1$ receiving reward $+1$
-    \item Agents choose $(a_1, a_2) = (R, P)$ with agent $1$ receiving reward $-1$
-    \item Using $Q(s, a_1)$ does not model agent $2$'s action's effects and thus the value for action $R$ appears to be 0
-    \item $Q_1(s, a_1, a_2)$ can represent the effect of agent $2$ thus ascribing different values to joint action $(R, S)$ and $(R, P)$
+    \item<2-> Agents choose actions $(a_1, a_2) = (R, S)$ $\quad\Rightarrow$ agent $1$ receives reward $+1$
+    \item<3-> Then agents choose $(a_1, a_2) = (R, P)$ $\quad\Rightarrow$ agent $1$ receives reward $-1$
+    \item<4-> Action value $Q(a_1)$ does not model agent $2$, value for action $R$ appears to be 0
+    \item<5-> \e{Joint action value model} $Q_1(a_1, a_2)$ can represent the effect of agent $2$: $Q_1(R, S)=+1$ and $Q_1(R, P)=-1$
 \end{enumerate}
 
 \end{frame}
 
 \begin{frame}{Scaling to Many Agents}
 
-The ability to scale to many agents is an important goal in MARL. Scaling agents is, however, a significant challenge for MARL as:
+    \begin{problembox}
+	    \blist
+	        \item \textbf{Joint action space} can grow \textbf{exponentially} with number of agents:
+	        	$$|A| = |A_1| \cdot ... \cdot |A_n|$$
+	        \item If agents have associated features in $s$ (e.g. agent position) then $|S|$ also increases exponentially
+	        %\item In CL, this increases the decision problem, while in IL this increases issues of non-stationarity and multi-agent credit assignment
+	        \listtab How to scale efficiently to many agents?
+	    \elist
+    \end{problembox}
 
-\begin{columns}
-    \begin{column}{0.4\textwidth}
-        \begin{figure}
-        \centering
-        \includegraphics[width=0.8\textwidth, height = 0.8\textheight, keepaspectratio]{images/environments/lbf/foraging_8x12_b.png}
-        \end{figure}
-    \end{column}
-    \begin{column}{0.6\textwidth}
-    \blist
-        \item \# of \textbf{joint action} can grow \textbf{exponentially} with \# agents since $|A| = |A_1| \cdot ... \cdot |A_n|$
-        \item Changing \# agents from 3 to 5 increases the number of joint actions from 216 to 7776
-        \item If agents have associated features in $s$ (e.g. agent position) then $|S|$ also increases exponentially
-        \item In CL, this increases the decision problem, while in IL this increases issues of non-stationarity and multi-agent credit assignment
-    \elist
-    \end{column}
-\end{columns}
-% \blist
+\end{frame}
 
-%     \item In level-based foraging from slide 16, if we change the number of agents from 3 to 5, we also increases the number of joint actions from 216 to 7776
-%     \item if the agents have their associated features in the state s, as they do in level-based foraging (agent positions), then the number of states $|S|$ also increases exponentially
-%     \item Central learning algorithms face challenges in the increased size of the decision problem, while independent learning suffers from increased issues of non-stationarity and multi-agent credit assignment
-% \elist
-% \end{columns}
+\begin{frame}{Scaling to Many Agents}
+	    
+	\bcol
+	    \col{0.45}
+	        \includegraphics[width=0.9\textwidth]{images/environments/lbf/foraging_8x12_b.png}
+	        
+	    \col{0.45}
+	        %\blist
+	        	Changing number of agents from 3 to 5 increases the number of joint actions from 216 to 7776!
+	        %\elist
+	\ecol
+
 \end{frame}
 
 \begin{frame}{Summary}
 
 \fat{We covered:}
     \blist
-        \item MARL Learning Process
+        \item MARL learning process
         \item Independent and central learning
-        \item Modes of learning in MARL
+        \item Modes of operation in MARL
         \item Challenges of MARL
     \elist
 

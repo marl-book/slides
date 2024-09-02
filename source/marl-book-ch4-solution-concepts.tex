@@ -663,13 +663,13 @@ Normal-form games provide a complexity {\it lower bound} for more complex games.
 \begin{frame}{Complexity Considerations for MARL}
 
 \blist
-    \item \fat{Reduction to NASH:} Computing Brouwer fixed points and other PPAD problems are reducible to the NASH problem, indicating there are no known efficient (polynomial time) algorithms for solving NASH
+    \item<1-> \fat{Reduction to NASH:} Computing Brouwer fixed points and other PPAD problems are reducible to the NASH problem, indicating there are no known efficient (polynomial time) algorithms for solving NASH
     
-    \item \fat{Approximate \(\epsilon\)-Nash Equilibrium:} PPAD-completeness holds for both approximate solutions (\(\epsilon > 0\)) and exact solutions (\(\epsilon = 0\)), with approximations often necessary due to potentially irrational equilibria
+    \item<2-> \fat{Approximate \(\epsilon\)-Nash Equilibrium:} PPAD-completeness holds for both approximate solutions (\(\epsilon > 0\)) and exact solutions (\(\epsilon = 0\)), with approximations often necessary due to potentially irrational equilibria
     
-    \item \fat{Implications for MARL:} MARL algorithms are unlikely to be a silver bullet for finding Nash equilibria efficiently
+    \item<3-> \fat{Implications for MARL:} MARL algorithms are unlikely to be a silver bullet for finding Nash equilibria efficiently
     
-    \item \fat{Research Focus in MARL:} Research often targets identifying exploitable structures in certain game types, but MARL may still require \fat{exponential} time when such structures are unavailable.
+    \item<4-> \fat{Research Focus in MARL:} Research often targets identifying exploitable structures in certain game types, but MARL may still require \fat{exponential} time when such structures are unavailable.
 \elist
     
 \end{frame}

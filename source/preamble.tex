@@ -588,31 +588,29 @@
 
 % Define intro slide command
 \newcommand{\introslide}{
-    \begin{frame}{MARL Book}
-        \begin{columns}
-            \begin{column}{0.5\textwidth}
-            \begin{figure}
-              \centering
-              \includegraphics[width=\textwidth,height=.8\textheight,keepaspectratio]{images/1_MARL_book.png}
-            
-              \label{fig:enter-label}
-            \end{figure}
-          \end{column}
-        
-        \hspace{20pt}
-            
-          % Column for the text
-            \begin{column}{0.45\textwidth}
-	        \small
-
-                This lecture is based on \textit{Multi-Agent Reinforcement Learning: Foundations and Modern Approaches} by Stefano V. Albrecht, Filippos Christianos and Lukas Sch\"afer
+    \begin{frame}[t]{The MARL Book}
+        \bcol           
+            \col{0.54}
+	        	\small
+                This lecture is based on \\[5pt]
+                \textbf{Multi-Agent Reinforcement Learning: Foundations and Modern Approaches} \\[5pt]
+                by Stefano V. Albrecht, Filippos Christianos and Lukas Sch\"afer \\[5pt]
+                MIT Press, 2024
                 
                 \vspace{20pt}
+
+				\centering
                 
-                The book can be downloaded for free at \textcolor{blue}{\href{https://www.marl-book.com/}{www.marl-book.com}}.
-            \end{column}
-        
-        \end{columns}
+                Download book, slides, and code at:
+
+                \textcolor{blue}{\href{https://www.marl-book.com/}{\bf www.marl-book.com}}
+                
+            \col{0.4}
+	            \vspace{5pt}
+	            
+	            \centering
+	            \includegraphics[width=0.82\textwidth]{images/marl-book-cover.jpg}
+        \ecol
     \end{frame}
 }
 

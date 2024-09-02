@@ -560,7 +560,7 @@ Architectures often used in RL and MARL are:
 
 \begin{frame}[t]{Convolutional Neural Networks}
 
-    \e{Convolutional neural networks} (CNNs) are neural networks designed for image processing.
+    \e{Convolutional neural networks} (CNNs) are neural networks for image processing
     \blist
         \item Blocks of parameters (called \fat{filters} or \fat{kernels}) are moved and repeatedly applied across an image
     \elist
@@ -575,7 +575,7 @@ Architectures often used in RL and MARL are:
             \item Feedforward NN: input layer with $128$ hidden units has \num{6291584} parameters
             \item CNN: with sixteen $5\times5$ filters has \num{1216} parameters
         \elist
-        \item \fat{Exploiting spatial correlations:} nearby pixels are likely related (e.g., edges), and the same spatial patterns may occur at different locations of an image
+        \item \fat{Spatial correlations:} nearby pixels are likely related (e.g., edges) $\rightarrow$ same spatial patterns may occur at different locations of an image
     \elist
 
 \end{frame}
@@ -590,7 +590,7 @@ Architectures often used in RL and MARL are:
 
 \only<2>{
 \begin{figure}
-    \includegraphics[width=0.4\textwidth]{images/chapter_7/cnn.pdf}
+    \includegraphics[width=0.5\textwidth]{images/chapter_7/cnn.pdf}
 \end{figure}
 }
 
@@ -612,7 +612,7 @@ Architectures often used in RL and MARL are:
 \begin{minipage}{0.48\textwidth}
     \only<2->{
         \blist
-          \item A convolution of a filter with parameters $W \in \mathbb{R}^{d_w \times d_w}$ over input $x \in \mathbb{R}^{d_x \times d_x}$ is:
+          \item Convolution of a filter with parameters $W \in \mathbb{R}^{d_w \times d_w}$ over input $x \in \mathbb{R}^{d_x \times d_x}$ is:
                 \[
                     y_{i, j} = \sum_{a=1}^{d_w}\sum_{b=1}^{d_w} W_{a,b} x_{i+a-1, j+b-1}
                 \]
