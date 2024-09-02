@@ -13,6 +13,7 @@ The slides use the `metropolis` theme, which is a modern, simple and clean theme
 
 Instructors who want to use the slides in their lectures are free to make changes (e.g. remove or add materials as required) by using the provided source files. However, please do include a credit line to mention the book and book authors, and include a link to the original slides.
 
+If you use the book or slides in your class, please let us know and we will add your class and institution to a list that will be published here.
 
 ## Reporting issues and proposing improvements
 
