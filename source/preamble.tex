@@ -544,7 +544,43 @@
   #1,
 }
 
-\newtcolorbox{custombox}[2][]{
+\newtcolorbox{greentitlebox}[2][]{
+  my box={
+    main={colframe=green!40!gray!90, colback=green!20!gray!5},
+    title={colback=green!40!gray!90},
+  },
+  title={#2},
+  #1,
+}
+
+\newtcolorbox{redtitlebox}[2][]{
+  my box={
+    main={colframe=red!40!gray!90, colback=red!20!gray!5},
+    title={colback=red!40!gray!90},
+  },
+  title={#2},
+  #1,
+}
+
+\newtcolorbox{orangetitlebox}[2][]{
+  my box={
+    main={colframe=orange!40!gray!80, colback=orange!20!gray!5},
+    title={colback=orange!40!gray!80},
+  },
+  title={#2},
+  #1,
+}
+
+\newtcolorbox{bluetitlebox}[2][]{
+  my box={
+    main={colframe=blue!60!gray!80, colback=blue!20!gray!5},
+    title={colback=blue!60!gray!80},
+  },
+  title={#2},
+  #1,
+}
+
+\newtcolorbox{graytitlebox}[2][]{
   my box={
     main={colframe=black!40!gray, colback=gray!10!white},
     title={colback=black!40!gray},
