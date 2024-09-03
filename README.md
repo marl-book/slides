@@ -15,8 +15,8 @@ Instructors who want to use the slides in their lectures are free to make change
 
 If you use the book or slides in your class, please let us know and we will add your class and institution to a list that will be published here.
 
-## Reporting issues and proposing improvements
+## Reporting issues and proposing improvements
 
 If you spot any typos or errors in the slides, please report them to us by [creating an Issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/creating-an-issue) here on Github.
 
-Similarly, if you have made improvements to the slides, consider creating a [merge request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/merging-a-pull-request) to incorporate your improvements to the files on this page.
+Similarly, if you have made improvements to the slides, consider creating a [pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/merging-a-pull-request) to incorporate your improvements to the files on this page.
