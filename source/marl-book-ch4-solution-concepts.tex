@@ -347,22 +347,21 @@ We can obtain a minimax solution for non-repeated zero-sum normal-form games by 
 
 \begin{frame}{Correlated Equilibrium}
 
-    We have previously assumed that the agent's policies are probabilistically independent, which can limit expected returns.
+    Nash equilibrium assumes policies are {\it independent} $\rightarrow$ can limit expected returns
 
+	\e{\bf Correlated equilibria} allow for correlated policies
+	
     \blist
-        \item \fat{Correlated equilibria} allow for correlated policies
-        \item \(\pi_c\) is a central policy that provides a probability distribution across all agents' actions
-        \item Agents can follow action 'recommendations' $\pi_c(a)$ or deviate by choosing another action, represented by action modifier $\xi_i$
-        \item then a \fat{correlated equilibrium} can be defined as:
+        \item<1-> $\pi_c$ is a central policy that assigns probabilities over {\it joint actions} $\ac \in \Ac$
+        \item<2-> Agents can follow actions 'recommended' by $\pi_c(a)$ or deviate by choosing another action, represented by action modifier $\xi_i : \Ac_i \mapsto \Ac_i$
+        \item<3-> Then $\pi_c$ is a correlated equilibrium if for all $i$ and $\xi_i$:
     \elist
-    \vspace{0pt}
+    \visible<3->{
     \begin{equation*}
-        \sum_{a \in A}\pi_c(a)\mathcal{R}_i(\langle\xi_i(a_i), a_{-i}\rangle) \le \sum_{a \in A}\pi_c(a)\mathcal{R}_i(a)
-    \end{equation*}
-
-    \blist
-     \item Nash equilibria are a special case of correlated equilibria 
-    \elist
+        \sum_{a \in A}\pi_c(a)\mathcal{R}_i(\langle\xi_i(a_i), a_{-i}\rangle) \ \le \ \sum_{a \in A}\pi_c(a)\mathcal{R}_i(a)
+    \end{equation*}}
+    
+    %Nash equilibria are a special case of correlated equilibria 
     
 \end{frame}
 
@@ -374,7 +373,7 @@ We can obtain a minimax solution for non-repeated zero-sum normal-form games by 
 \gamechicken 
 
 \begin{flushleft}
-\only<1>{Non-Correlated Nash Equilibrium:}
+\only<1>{Nash Equilibrium (not correlated):}
 \only<2>{Correlated Nash Equilibrium:}
 
     \only<1>{
@@ -389,7 +388,7 @@ We can obtain a minimax solution for non-repeated zero-sum normal-form games by 
         \item \(\pi_c(L, L) = \pi_c(S, L) = \pi_c(L, S) = \frac{1}{3}\) and \(\pi_c(S,S) = 0\)
         \item Expected return $=7 \cdot \frac{1}{3} + 2 \cdot \frac{1}{3} + 6 \cdot \frac{1}{3} = 5$
         \item Assuming knowledge of $\pi_c$, if agent $i$ receives recommendation $L$ they know agent $j$ will choose either $S$ or $L$ with probability $0.5$ 
-        \item Thus expected return is $0.5 \cdot 6 + 0.5 \cdot 2 = 4$, which is greater than deviating from the action where the agent $i$  has an expected return $0.5 \cdot 0 + 0.5 \cdot 7 = 3.5$
+        \item Expected return is $0.5 \cdot 6 + 0.5 \cdot 2 = 4$, which is greater than deviating from the action where the agent $i$ has an expected return $0.5 \cdot 0 + 0.5 \cdot 7 = 3.5$
     \elist
     }
 \end{flushleft}
@@ -398,13 +397,13 @@ We can obtain a minimax solution for non-repeated zero-sum normal-form games by 
 
 \begin{frame}{Coarse Correlated Equilibrium}
 
-\fat{Coarse correlated equilibria} are more general than correlated equilibria where the action modifier \(\xi_i\) is not conditioned on the recommended action given by \(\pi_c\).
+\fat{Coarse correlated equilibria} are even more general than correlated equilibria:
 
 \blist
-    \item In correlated equilibrium \(\xi_i: A_i \to A_i\), such that it takes the recommended action and provides an alternative action
-    \item Coarse correlated equilibrium \(\xi_i\) is a constant action
-    \item In other words the agent needs to choose to deviate from the recommended action before seeing it
-    \item The coarse correlated equilibrium plays an important role in no-regret learning discussed in later slides
+    \item In correlated equilibrium: \(\xi_i: A_i \to A_i\), such that it takes the recommended action from $\pol_c$ and provides an alternative action
+    \item In {\it coarse} correlated equilibrium: \(\xi_i\) is a constant action
+    \item Meaning: agent needs to choose to deviate from the recommended action {\it before} seeing it
+    \item Coarse correlated equilibrium plays an important role in no-regret learning (discussed later)
 \elist
     
 \end{frame}
