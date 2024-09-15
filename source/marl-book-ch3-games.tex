@@ -62,10 +62,12 @@
     \fat{Normal-form} games define a \fat{single} interaction between two or more agents, providing a simple kernel for more general games to build upon. 
     \vspace{5pt}
     
+    \pause
+    
     \fat{Normal-form} games are defined as a 3 tuple \((I, \{A_i\}_{i \in I}, \{\mathcal{R}_i\}_{i \in I})\):
     \blist
-        \item $I$ is a finite set of agents \(I = \{1, ..., n\}\)
-        \item For each agent \(i \in I\):
+        \item<2-> $I$ is a finite set of agents \(I = \{1, ..., n\}\)
+        \item<3-> For each agent \(i \in I\):
         \blist
             \item \(A_i\) is a finite set of actions
             \item \(\mathcal{R}_i\) is the reward function \(\mathcal{R}_i: A \to \mathbb{R}\) where \(A = A_1 \times ... \times A_n\) (set of \fat{joint} actions). 
@@ -79,7 +81,6 @@
 
     In a normal-form game, there are \fat{no time steps or states}. Agents choose an action and observe a reward.
     \vspace{10pt}
-    \pause
     
     \visible<1->The game proceeds as follows:
     \pause
@@ -99,11 +100,13 @@
     Games can be classified based on the relationship between the agents' reward functions. 
 
     \blist
-        \item In \fat{zero-sum games}, the sum of the agents' reward is always 0\\
+        \item<1-> In \fat{zero-sum games}, the sum of the agents' reward is always 0\\
         i.e. \(\sum_{i \in I} \mathcal{R}_{i} (a) = 0, \forall a \in A\)
-        \item In \fat{common-reward} games, all agents receive the same reward 
+
+        \item<2-> In \fat{common-reward} games, all agents receive the same reward 
         (\(R_i = R_j ; \forall i, j \in I\))
-        \item In \fat{general-sum} games, there are no restrictions on the relationship between reward functions. 
+
+        \item<3-> In \fat{general-sum} games, there are no restrictions on the relationship between reward functions. 
     \elist
     
 \end{frame}
@@ -195,15 +198,15 @@ To extend normal-form games to \fat{sequential} multi-agent interaction, we can 
     \e{\bf Stochastic games} introduce the notion of \fat{states} and are defined as a 6 tuple \((I, S, \{A_i\}_{i \in I}, \{\mathcal{R}_i\}_{i \in I}, \mathcal{T}, \mu)\)
     \vspace{10pt}
     \blist
-        \item $I$ is a finite set of agents
-        \item $S$ is a finite set of states with subset of terminal states $\bar{S} \subset S$
-        \item For each agent $i \in I$:
+        \item<2-> $I$ is a finite set of agents
+        \item<3-> $S$ is a finite set of states with subset of terminal states $\bar{S} \subset S$
+        \item<4-> For each agent $i \in I$:
         \blist
             \item $A_i$ is a set finite set of actions
             \item $\mathcal{R}_i$ is the reward function $\mathcal{R}_i : S \times A \times S \to \mathbb{R}$ where $A$ is the set of \fat{joint} actions $A = A_1 \times ... \times A_n$
         \elist
-        \item $\mathcal{T}$ is the state transition function $\mathcal{T}: S \times A \times S \to [0, 1]$
-        \item $\mu$ is the initial state distribution $\mu: S \to [0, 1]$
+        \item<5-> $\mathcal{T}$ is the state transition function $\mathcal{T}: S \times A \times S \to [0, 1]$
+        \item<6-> $\mu$ is the initial state distribution $\mu: S \to [0, 1]$
     \elist
 
 \end{frame}
