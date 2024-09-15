@@ -17,7 +17,7 @@
     \vspace{5pt}
     \blist
         \item Multi-agent systems
-        \item Advantages of MARL vs SARL in multi-agent systems
+        \item Multi-agent RL in multi-agent systems
         \item Challenges of MARL   
     \elist
     \vspace{10pt}
@@ -33,7 +33,7 @@
 \section{Part 1: Introduction}
 
 \begin{frame}{What is MARL?}
-		\textbf{\textit{Multi-agent reinforcement learning (MARL) is about finding optimal decision policies for two or more artificial agents interacting in a common environment.}}
+		\textbf{\textit{Multi-agent reinforcement learning (MARL) is about finding optimal decision policies for two or more artificial agents interacting in a shared environment.}}
   \vspace{20pt}
   \blist
     \item Applying reinforcement learning (RL) algorithms to multi-agent systems
@@ -48,12 +48,12 @@
         \centering
         \includegraphics[width=.65\linewidth, keepaspectratio]{images/1_starcraft.png}
         
-        Competitive games
+        Computer games
     \end{minipage}%
     % Top right image
     \begin{minipage}{.5\linewidth}
         \centering
-        \includegraphics[width=.7\linewidth, keepaspectratio]{images/1_self_driving.png}
+        \includegraphics[width=.65\linewidth, keepaspectratio]{images/1_self_driving.png}
         
         Autonomous driving
     \end{minipage}
@@ -78,8 +78,9 @@
 \begin{frame}{Mutli-Agent Systems}
 	\begin{graytitlebox}{A multi-agent system consists of:}
     \blist
-        \item \textbf{Environment:} The environment is a physical or virtual world whose state evolves and is influenced by the agents' actions within the environment. 
-        \item \textbf{Agents:} An agent is an entity which receives information about the state of the environment and can choose actions to influence the state.
+        \item<1-> \textbf{Environment:} The environment is a physical or virtual world whose state evolves and is influenced by the agents' actions within the environment.
+        
+        \item<2-> \textbf{Agents:} An agent is an entity which receives information about the state of the environment and can choose actions to influence the state.
         \listtab Agents are goal-directed, e.g. maximizing returns
     \elist
     \end{graytitlebox}
@@ -98,8 +99,8 @@
 	\bcol
 		\col{0.5}
 		    \blist
-		        \item Three agents with varying skill levels
-		        \item Goal: to collect all apples
+		        \item Three agents (robots) with varying skill levels
+		        \item Goal: to collect all items (apples)
 		        \item Items can be collected if a group of one or more agents are located next to the item and the sum of agents' levels is greater than or equal to the item level
 		        \item Action space $\Ac = \{up, down, left, right, collect, noop\}$
 		    \elist
@@ -117,9 +118,9 @@
     \end{figure} 
 
     \blist
-        \item Goal: learn optimal policies for a set of agents in a multi-agent system
+        \item {\bf Goal:} learn optimal policies for a set of agents in a multi-agent system
         \item Each agent chooses an action based on its policy $\Rightarrow$ joint action
-        \item Environment transitions into new state; agents receive rewards $+$ new observations
+        \item Joint action affects environment state; agents get rewards $+$ new observations
      \elist
 \end{frame}
 
@@ -133,17 +134,20 @@
   \bcol
     \tcol{0.45}
     	\visible<2->{
-        \e{Decomposing a larger problem}
+        {\bf Decomposing a large problem}
         \blist
-            \item For example, controlling $3$ agents each with $6$ actions (see LBF example), the action space becomes $6^3 = 216$.
-            \item Using MARL, we decompose this into three more tractable problems. 
+            \item In LBF example, controlling $3$ robots each with $6$ actions, the joint action space becomes $6^3 = 216$.
+            \listtab Large action space for SARL!
+            
+            \item We can decompose this into three independent agents, each selecting from only 6 actions.
+            \listtab Use MARL to train separate agent policies (more tractable)
         \elist}
 
     \tcol{0.45}
 	    \visible<3->{
-        \e{Decentralized decision making}
+        {\bf Decentralized decision making}
         \blist
-            \item There are many real-world scenarios where it is beneficial for each agent to make decisions independently.
+            \item There are many real-world scenarios where it is required for each agent to make decisions independently.
             \item E.g. autonomous driving is impractical for frequent long-distance data exchanges between a central agent and the vehicle.
         \elist}
 	\ecol
@@ -159,31 +163,50 @@
     \elist
     \end{graytitlebox}
     
-    We will explore these challenges in upcoming lectures!
+    \visible<5->{We will explore these challenges in upcoming lectures!}
     
 \end{frame}
 
-% \begin{frame}{MARL Applications of }
+	\begin{frame}{Challenges of Multi-Agent Learning}
+		\bcol
+			\col{0.50}
+				\fat{Non-stationary environment:}
+				
+				\vspace{5pt}
+				
+				If multiple agents are learning, the environment becomes \e{non-stationary} from the perspective of individual agents
+				
+				\vspace{15pt}
+				
+				$\Rightarrow$ {\bf Moving target:} each agent is optimizing against changing policies of other agents
+				
+			\col{0.45}
+				\vspace{10pt}
+				\imgw{images/chapter_5/wolfphc_rps_own.pdf}{1.0}
+		\ecol
+	\end{frame}
 
-%     \fat{Competitive Gaming:}
-%     \blist
-%         \item Video and Board Games (Backgammon, Chess, Go, Starcraft etc.).
-%     \elist
-%     \fat{Warehousing:}
-%     \blist
-%         \item Warehouse Robot Management, robots that can 
-%         retrieve items requested by users from the warehouse).
-%     \elist
-%     \fat{Autonomous Driving:}
-%     \blist
-%         \item Autonomous Driving (controlling policies for multiple vehicles to navigate through complex interaction. 
-%     \elist
-%     \fat{Trading Bots:}
-%     \blist
-%         \item Automated Trading in Electronic Markets.
-%     \elist
+\begin{frame}{Multi-Agent Credit Assignment}
+
+{\bf Multi-agent credit assignment:} which agent's actions contributed to receved rewards? \\[15pt]
+
+\bcol
+    \col{0.5}
+            \centering
+            \includegraphics[width=0.85\textwidth]{images/environments/lbf/foraging_8x12_b.png}
+
+    \col{0.5}
+        \blist
+            \item At time step $t$ all agents perform \textit{collect}, each receiving reward $+1$
+            \item Whose actions led to the reward?
+            \item The agent on the left did not contribute
+            \item Learning agents must disentangle the contributions of actions!
+        \elist
+
+\ecol
     
-% \end{frame}
+\end{frame}
+
 
 \section{Part 2: Reinforcement Learning Basics}
 
@@ -203,7 +226,7 @@
     
 \end{frame}
 
-\begin{frame}{MDP As a Graph}
+\begin{frame}{Markov Decision Process -- Graph}
     
       \centering
       \includegraphics[width=1\textwidth]{images/1_mdp_diagram_elipses.pdf}
@@ -213,16 +236,17 @@
 \begin{frame}{MDP Definition}
   \bcol
 
-    % Left column for text
     \col{0.5}
-     MDP is defined as a tuple $(S, A, \mathcal{R}, \mathcal{T}, \mu):$
+     MDP is defined as: \\[5pt]
      
       \blist
-        \item \textcolor{blue}{$S$}: Finite set of states with subset of terminal states $\bar{S} \subset S$
+      	\itemsep=10pt
+        \item \textcolor{blue}{$S$}: Finite set of states, with subset of terminal states $\bar{S} \subset S$
         \item \textcolor{red}{$A$}: Finite set of actions
         \item \textcolor{green}{$\mathcal{R}$}: Reward function $\mathcal{R}: \textcolor{blue}{S} \times \textcolor{red}{A} \times \textcolor{blue}{S} \to \mathbb{R}$
         \item $\mathcal{T}:$ State transition function $\mathcal{T}: \textcolor{blue}{S} \times \textcolor{red}{A} \times \textcolor{blue}{S} \to [0, 1]$
-        \item $\mu$: Initial state distribution $\mu: S \to [0,1]$ such that $\sum_{s\in S}\mu (s) = 1$ and $\forall s \in \hat{S}: \mu (s) = 0$
+        \item $\mu$: Initial state distribution $\mu: S \to [0,1]$
+        %such that $\sum_{s\in S}\mu (s) = 1$ and $\forall s \in \hat{S}: \mu (s) = 0$
       \elist
 
     \col{0.5}
@@ -246,8 +270,8 @@
             \visible<2->{
             \fat{\e{Full observability}}
             \blist
-                \item The agent can see the entire state of the environment. 
-                \item In practice, agent may only have partial view.
+                \item Agent can see the entire state of the environment. 
+                \item In many applications, agent may only have partial view.
             \elist} 
         \end{column}
         
@@ -257,43 +281,37 @@
             \visible<3->{
             \fat{\e{Stationarity}}
             \blist
-                \item The dynamics of the environment are assumed to be stationary. 
-                \item i.e. $\mathcal{T}$ and \textcolor{green}{$\mathcal{R}$} remain constant through time. 
+                \item Dynamics of the environment are assumed to be stationary. 
+                \item i.e. $\mathcal{T}$ and \textcolor{green}{$\mathcal{R}$} are constant through time
             \elist}
             \vspace{10pt}
             \visible<4->{
             \fat{\e{Incomplete knowledge of MDP}}
             \blist
-                \item The agent may only have knowledge of the action and state spaces ($\textcolor{red}{A}, \textcolor{blue}{S}$)
-                \item The transition and reward function ($\mathcal{T}, \mathcal{R}$) are usually to be \fat{unknown}.
+                \item Agent may only have knowledge of the action and state spaces ($\textcolor{red}{A}, \textcolor{blue}{S}$)
+                \item Transition and reward functions ($\mathcal{T}, \mathcal{R}$) are usually assumed to be \fat{unknown}.
             \elist}
         \end{column}
     \end{columns}
 \end{frame}
 
-\begin{frame}{Mars Rover MDP Example}
-    \begin{columns}[onlytextwidth] 
+\begin{frame}[t]{Mars Rover MDP Example}
+    \bcol
     
-      \begin{column}{0.5\textwidth}
-        \begin{figure}
-          \centering
-          \includegraphics[width=\textwidth,height=.8\textheight,keepaspectratio]{images/chapter_2/mdp-rover.pdf}
-          \label{fig:enter-label}
-        \end{figure}
-      \end{column}
+      \col{0.58}
+          \includegraphics[width=1\textwidth]{images/chapter_2/mdp-rover.pdf}
     
-      % Column for the text
-      \begin{column}{0.5\textwidth}
+      \col{0.40}
+      \small
         \blist
           \item \textit{Start} is the initial state \(s^0\)
           \item Two possible actions \(A = \{right, left\}\)
-          \item Goal is to get to \textit{Base}
-          \item Rewards given by $\mathcal{R}(s, a, s')$ are shown as $r$. 
+          \item Goal is to get to \textit{Base} terminal state
+          \item Rewards given by $\mathcal{R}(s, a, s')$ are shown as $r$
           \item State transition probabilities given by $\mathcal{T}(s, a, s)$, are shown as $p$
         \elist
-      \end{column}
     
-    \end{columns}
+    \ecol
 \end{frame}
 
 \begin{frame}{RL for Optimizing Policies in MDPs}
@@ -306,11 +324,11 @@
     \bcol
         \col{0.47}
             \e{\fat{Value-Based RL}} \\
-            These methods indirectly update the policy by learning value functions.
+            Indirectly optimize the policy by learning value functions.
 
         \col{0.47}
             \e{\fat{Policy-Based RL}} \\
-            These methods update a parameterized policy function directly.
+            Directly optimize a parameterized policy function.
                 % \item These methods also include hybrid approaches (actor-critic) that update a parameterised policy function but use value function approximation as a baseline. 
     
     \ecol
@@ -374,7 +392,7 @@
 \end{frame}
 
 \begin{frame}{State-Action Value Function}
-    \textit{State-Action} value functions $Q^{\pi}(s,a)$ are an extension on the \textit{State} value functions. They condition the expected return on the current state and the action taken.
+    \textbf{State-Action} value functions $Q^{\pi}(s,a)$ are an extension on the \textit{State} value functions. They condition the expected return on the current state and the action taken.
     \begin{align*}
          Q^{\pi}(s,a) = \mathbb{E}_{\pi}\left[u^{t}|s^{t}=s, a^{t}=a\right]
     \end{align*}
@@ -389,7 +407,7 @@ The \textit{state-action} value Bellman equation is therefore:
 
 \begin{frame}{Greedy Policies}
 
-    A policy can act \textit{greedily} i.e. choosing actions which maximize the immediate reward and the value of the next state.
+    A policy can act \textbf{greedily}: choosing actions that have maximum estimated value.
     \vspace{10pt}
     
     Greedy $\pi$ using \textit{state value} functions:
@@ -406,11 +424,11 @@ The \textit{state-action} value Bellman equation is therefore:
     
 \end{frame}
 
-\begin{frame}{Optimal Greedy Policy}
+\begin{frame}[t]{Optimal Greedy Policy}
 
    A greedy policy with respect to a value function is optimal only when using the \textbf{optimal value function.} 
     
-    An \textbf{optimal value function} for a MDP can be defined as:
+    Optimal value function for a MDP is defined as:
     \vspace{5pt}
     \begin{align*}
         V^{*}(s) &= \max_{\pi'} V^{\pi'}(s), \quad \forall s \in S \\
@@ -426,6 +444,7 @@ The \textit{state-action} value Bellman equation is therefore:
 
 \begin{frame}{Dynamic Programming}
     \blist
+    	\itemsep=10pt
         \item Dynamic Programming (DP) is a family of algorithms to compute \textbf{optimal value functions} and \textbf{optimal policies in MDPs} (Bellman 1957; Howard 1960).
         \item In DP, we \textbf{assume complete knowledge} of the MDP, including the transition and reward function ($\mathcal{T}, \mathcal{R}$).
         \item Given complete knowledge, we can use the \textbf{Bellman equation} to find optimal value functions and policies.
@@ -433,15 +452,16 @@ The \textit{state-action} value Bellman equation is therefore:
 \end{frame}
 
 \begin{frame}{Policy Iteration}
-    \fat{Policy iteration} is a DP algorithm that alternates between two steps:
+	\begin{bluetitlebox}{Policy Iteration}
+    \fat{Policy Iteration} is a DP algorithm that alternates between two steps: \\
         \blist
             \item \textbf{Policy evaluation}: compute value function $V^{\pi}$ for current policy $\pi$
             \item \textbf{Policy improvement}: improve current policy $\pi$ with respect to $V^{\pi}$
         \elist 
-
-    \begin{align*}
-        \pi^{0} \to V^{\pi^{0}}\to \pi^{1} \to V^{\pi^{1} } \to\pi^{2} \to ... \to V^{*} \to \pi^{*} 
-    \end{align*}
+	    \begin{align*}
+	        \pi^{0} \to V^{\pi^{0}}\to \pi^{1} \to V^{\pi^{1} } \to\pi^{2} \to ... \to V^{*} \to \pi^{*} 
+	    \end{align*}
+    \end{bluetitlebox}
 
     % \begin{figure}
     %     \centering
@@ -482,7 +502,7 @@ The \textit{state-action} value Bellman equation is therefore:
 \begin{frame}{Value Iteration}
 	\textbf{Value Iteration} uses the \textbf{Bellman optimality equation}
     \blist
-        \item Combines iterative policy evaluation and improvement into one single update equation.
+        \item Combines iterative policy evaluation and improvement into one update rule.
     \elist
 
     \textit{Bellman Optimality Equation as update operator:}
@@ -491,7 +511,7 @@ The \textit{state-action} value Bellman equation is therefore:
     \end{align*}
 
     \blist
-        \item The max operator makes this the Bellman \textit{optimality} equation.
+        \item The $\max$-operator makes this the Bellman \textit{optimality} equation.
         \item The equation expresses the value of a state as the maximum expected return achievable by taking the best action and then following the optimal policy.
     \elist
 \end{frame}
@@ -520,7 +540,7 @@ The \textit{state-action} value Bellman equation is therefore:
     \elist
 \end{frame}
 
-\begin{frame}{Temporal Difference Update}
+\begin{frame}{Temporal-Difference Update}
     The update for temporal-difference learning relies on value functions:
     \vspace{0pt}
     \begin{align*}
@@ -540,7 +560,6 @@ The \textit{state-action} value Bellman equation is therefore:
 \begin{frame}{Temporal-Difference Update}
     
     In SARSA (a basic TD algorithm), we use the experience tuple $(\st^{t}, \ac^{t}, \rew^{t}, \st^{t+1}, \ac^{t+1})$ to construct a target:
-    \vspace{10pt}
     \begin{align*}
         \mathcal{X} = \rew^t + \gamma Q(\st^{t+1}, \ac^{t+1})
     \end{align*}
@@ -588,13 +607,13 @@ The SARSA update rule thus becomes:
     \ealg
 \end{frame}
 
-\begin{frame}{Convergence of SARSA}
+\begin{frame}[t]{Convergence of SARSA}
 
     SARSA is guaranteed to converge to the optimal \textbf{state-value function}, for all $S \in S$ and $a \in A$, if:
-    \vspace{10pt}
     \blist
-        \item All \textit{state-action} pairs are explored infinitely many times: $$\forall s \in S, a \in A: \sum_{k=0}^{\infty} \mathbb{I}(s, a) \to \infty $$
-        \item The learning rate $\alpha$ is reduced over time according to the "standard stochastic approximation conditions": $$\forall s \in S, a \in A: \sum_{k=0}^{\infty} \alpha_k(s, a) \to \infty \quad \text{and} \quad \sum_{k=0}^{\infty} \alpha_k(s, a)^2 < \infty$$
+        \item<1-> All \textit{state-action} pairs are explored infinitely many times: $$\forall s \in S, a \in A: \sum_{k=0}^{\infty} \mathbb{I}(s, a) \to \infty $$
+
+        \item<2-> The learning rate $\alpha$ is reduced over time according to the "standard stochastic approximation conditions": $$\forall s \in S, a \in A: \sum_{k=0}^{\infty} \alpha_k(s, a) \to \infty \quad \text{and} \quad \sum_{k=0}^{\infty} \alpha_k(s, a)^2 < \infty$$
     \elist        
 \end{frame}
 
@@ -738,7 +757,7 @@ The SARSA update rule thus becomes:
 
 \fat{We covered:}
 \blist
-    \item Multi-Agent Systems and the case for MARL
+    \item Intro to Multi-Agent Systems and MARL
     \item MDPs
     \item Value Functions
     \item Dynamic Programming
