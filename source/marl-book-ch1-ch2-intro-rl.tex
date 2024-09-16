@@ -392,7 +392,7 @@
 \end{frame}
 
 \begin{frame}{State-Action Value Function}
-    \textbf{State-Action} value functions $Q^{\pi}(s,a)$ are an extension on the \textit{State} value functions. They condition the expected return on the current state and the action taken.
+    \textbf{State-action} value functions $Q^{\pi}(s,a)$ are an extension on the \textit{State} value functions. They condition the expected return on the current state and the action taken.
     \begin{align*}
          Q^{\pi}(s,a) = \mathbb{E}_{\pi}\left[u^{t}|s^{t}=s, a^{t}=a\right]
     \end{align*}
@@ -400,7 +400,7 @@
 The \textit{state-action} value Bellman equation is therefore:
 \vspace{10pt}
 \begin{align*}
-    Q^{\pi}(s,a) = \sum_{a \in A} \pi(a|s) \sum_{s' \in S} \mathcal{T}(s'|s,a) \left[\mathcal{R}(s,a,s') + \gamma Q^{\pi}(s')\right]
+    Q^{\pi}(s,a) = \sum_{s' \in S} \mathcal{T}(s'|s,a) \left[\mathcal{R}(s,a,s') + \gamma V^{\pi}(s')\right]
 \end{align*}
 
 \end{frame}
@@ -541,7 +541,7 @@ The \textit{state-action} value Bellman equation is therefore:
 \end{frame}
 
 \begin{frame}{Temporal-Difference Update}
-    The update for temporal-difference learning relies on value functions:
+    The update for temporal-difference learning uses value functions:
     \vspace{0pt}
     \begin{align*}
         V(s^{t}) \gets V(s^{t}) + \alpha \left[\mathcal{X} - V(s^{t})\right]
@@ -549,7 +549,7 @@ The \textit{state-action} value Bellman equation is therefore:
     or 
     \vspace{0pt}
     \begin{align*}
-        Q(s^{t}, a^{t}) \gets (s^{t}, a^{t})  + \alpha \left[\mathcal{X} - (s^{t}, a^{t})\right]
+        Q(s^{t}, a^{t}) \gets Q(s^{t}, a^{t})  + \alpha \left[\mathcal{X} - Q(s^{t}, a^{t})\right]
     \end{align*}
 	\blist
     	\item $\mathcal{X}$ is the update target, serving as an estimate of the current state value. 
