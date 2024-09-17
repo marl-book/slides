@@ -531,9 +531,9 @@ To apply the policy gradient theorem, we must find a way to derive expected retu
     \begin{solutionbox}
         \blist
             % \item MC estimates are high-variance as they depend on all the states and  actions encountered during an episode
-            \item One way to reduce variance is subtract a \textbf{baseline} from the return estimates
-            \item A common choice of baseline is a state-value function $V(s)$ which can be trained to minimize the loss $\mathcal{L}(\theta) = \frac{1}{T}\sum_{t=1}^{T-1}(u(h^t)-V(s^t; \theta))^2$
-            \item The REINFORCE policy loss would then become 
+            \item Reduce variance by subtracting a \textbf{baseline} from the return estimates
+            \item Common choice of baseline is state-value function $V(s)$ which can be trained to minimize the loss $\mathcal{L}(\theta) = \frac{1}{T}\sum_{t=1}^{T-1}(u(h^t)-V(s^t; \theta))^2$
+            \item The REINFORCE policy loss then becomes
         \elist
         \[
         \mathcal{L}(\phi) = - \frac{1}{T}\sum_{t=0}^{T-1}\left(u(h^t)-V(s^t; \theta)\right)log \pi(a^t \mid s^t; \phi)
@@ -614,21 +614,13 @@ The policy gradient theorem allows us to optimize our parameterized policy; we s
 
 \begin{frame}[t]{Advantage Actor Critic (A2C)}
 
-Advantage actor-critic is a foundation actor-critic algorithm which uses the \textbf{advantage} of a policy to guide the policy gradients.
-
-\blist
-    \item The advantage is defined as
-\elist
-\vspace{0pt}
+Advantage actor-critic is a foundation actor-critic algorithm which uses the \textbf{advantage} of a policy to guide the policy gradients:
 \[
-    Adv^{\pi}(s, a) = Q^{\pi}(s, a) - V^{\pi}(s) = \rew + 
+    Adv^{\pi}(s, a) = Q^{\pi}(s, a) - V^{\pi}(s)
 \]
 
 \visible<2->{
-    \blist
-        \item We can compute the advantage using only a state-value function:
-    \elist
-    \vspace{0pt}
+	We can compute the advantage using only a state-value function:
     \[
     Adv(s^t, a^t) = Q(s^t, a^t) - V(s^t) = 
     \begin{cases} 
@@ -675,7 +667,7 @@ Advantage actor-critic is a foundation actor-critic algorithm which uses the \te
     \vspace{-1em}
 
     \begin{problembox}
-        Policy gradient methods can cause significant shifts in the policy with a single update which can worsen the policy!
+        Policy gradient methods can cause significant shifts in the policy with a single update, which can worsen the policy!
     \end{problembox}
 
     \begin{solutionbox}
@@ -710,11 +702,11 @@ Advantage actor-critic is a foundation actor-critic algorithm which uses the \te
 \elist
 
 \visible<2->{
-    Importance sampling ratios serves multiple purposes:
+    Importance sampling ratios serve multiple purposes:
 
     \blist
         \item Correct for differences in data distributions of $\pi_\beta$ and $\pi$
-        \item Represent measure of divergence between $\pi_\beta$ and $\pi$ $\rightarrow$ can be clipped to limit divergence
+        \item Measure of divergence between $\pi_\beta$ and $\pi$ $\rightarrow$ can be clipped to limit divergence
     \elist
 }
 
@@ -772,30 +764,20 @@ Advantage actor-critic is a foundation actor-critic algorithm which uses the \te
 \end{frame}
 
 \begin{frame}{Policy Gradient Algorithms in Practice}
-\setcounter{subfigure}{0}
-\begin{figure}[htbp]
-\centering
+	\bcol
+		\col{0.4}
+    		\includegraphics[width=0.8\textwidth]{images/chapter_8/single_agent_lbf_nolevel.pdf}
 
-\subfloat[Single-agent level-based foraging environment]{
-    \includegraphics[width=0.3\textwidth]{images/chapter_8/single_agent_lbf_nolevel.pdf} % Replace with the path to your image
-    % \label{fig:foraging_env}
-}
-\hfill % This adds some horizontal space between the subfigures
-\subfloat[Learning curves]{
-    \includegraphics[width=0.6\textwidth]{images/chapter_8/pg_lbf_returns.pdf} 
-    % \label{fig:learning_curves}
-}
-
-\end{figure}
-\vspace{2pt}
-    
+		\col{0.55}
+		    \includegraphics[width=1\textwidth]{images/chapter_8/pg_lbf_returns.pdf} 
+    \ecol
 \end{frame}
 
 \section{Concurrent Training}
 
 \begin{frame}{Concurrent Training of Policies}
 
-Policy gradient algorithms rely on on-policy data, which raises the question of how to deal with correlation in the collected data and how to increase sample efficiency. 
+Policy gradient algorithms rely on on-policy data, which raises the question of how to deal with correlation in the data and how to increase sample efficiency. 
 
 \blist
     \item Concurrent training of policies speeds up training by getting more samples (in parallel), leading to better gradients and breaking of correlation of data
@@ -848,7 +830,7 @@ Policy gradient algorithms rely on on-policy data, which raises the question of 
 
 \begin{frame}{Observation, States, and Histories in Practice}
 
-We have thus far only considered algorithms that condition on the entire states of the environment, in practice we however often have \textbf{partial observability}.
+We have thus far only considered algorithms that condition on the entire states of the environment, but in practice we often have \textbf{partial observability}.
 
 \begin{columns}
     \begin{column}{0.4\textwidth}
