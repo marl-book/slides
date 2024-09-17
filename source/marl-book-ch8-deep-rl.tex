@@ -445,10 +445,10 @@ The assumption that $Pr(s\mid \pi)$ is \textbf{on-policy} becomes apparent throu
 \vspace{0pt}
 \begin{align*}
 \nabla_{\phi} J(\phi) &\propto \sum_{s \in S} \Pr(s \mid \pi) \sum_{a \in A} Q^{\pi}(s, a) \nabla_{\phi} \pi(a \mid s; \phi) \\
-\visible<2->{&= \mathbb{E}_{a \sim \pi(\cdot \mid s; \phi)} \left[ \sum_{a \in A} Q^{\pi}(s, a) \nabla_{\phi} \pi(a \mid s; \phi) \right]} \\
-\visible<3->{&= \mathbb{E}_{a \sim \pi(\cdot \mid s; \phi)} \left[ \sum_{a \in A} \pi(a \mid s; \phi) Q^{\pi}(s, a) \frac{\nabla_{\phi} \pi(a \mid s; \phi)}{\pi(a \mid s; \phi)} \right] \\
-\visible<4->{&= \mathbb{E}_{a \sim \pi(\cdot \mid s; \phi)} \left[Q^{\pi}(s, a) \frac{\nabla_{\phi} \pi(a \mid s; \phi)}{\pi(a \mid s; \phi)} \right]}} \\
-\visible<5->{&= \mathbb{E}_{a \sim \pi(\cdot \mid s; \phi)} \left[ Q^{\pi}(s, a) \nabla_{\phi} \log \pi(a \mid s; \phi) \right]} \\
+\visible<2->{&= \mathbb{E}_{\st \sim \Pr(\cdot \mid \pi)} \left[ \sum_{a \in A} Q^{\pi}(s, a) \nabla_{\phi} \pi(a \mid s; \phi) \right]} \\
+\visible<3->{&= \mathbb{E}_{\st \sim \Pr(\cdot \mid \pi)} \left[ \sum_{a \in A} \pi(a \mid s; \phi) Q^{\pi}(s, a) \frac{\nabla_{\phi} \pi(a \mid s; \phi)}{\pi(a \mid s; \phi)} \right] \\
+\visible<4->{&= \mathbb{E}_{\st \sim \Pr(\cdot \mid \pi), a \sim \pi(\cdot \mid s; \phi)} \left[Q^{\pi}(s, a) \frac{\nabla_{\phi} \pi(a \mid s; \phi)}{\pi(a \mid s; \phi)} \right]}} \\
+\visible<5->{&= \mathbb{E}_{\st \sim \Pr(\cdot \mid \pi), a \sim \pi(\cdot \mid s; \phi)} \left[ Q^{\pi}(s, a) \nabla_{\phi} \log \pi(a \mid s; \phi) \right]} \\
 \end{align*}
 \end{frame}
 
