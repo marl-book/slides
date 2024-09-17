@@ -466,7 +466,7 @@ The assumption that $Pr(s\mid \pi)$ is \textbf{on-policy} becomes apparent throu
     \[
         \nabla_{\phi} J(\phi) \propto \mathbb{E}_{a \sim \pi(\cdot \mid s; \phi)} \left[Q^{\pi}(s, a) \frac{\nabla_{\phi} \pi(a \mid s; \phi)}{\pi(a \mid s; \phi)} \right]
     \]
-    \vspace{.5em}
+    \vspace{.3em}
 
     We can interpret the components of the policy gradient theorem as follows:
     \blist
@@ -481,21 +481,21 @@ The assumption that $Pr(s\mid \pi)$ is \textbf{on-policy} becomes apparent throu
 
 \begin{frame}[t]{REINFORCE: Monte Carlo}
 
-To apply the policy gradient theorem we must find a way to derive expected returns, one way to do this is to use Monte Carlo (MC) methods. 
+To apply the policy gradient theorem, we must find a way to derive expected returns.
 
 \blist
-    \item \textbf{REINFORCE} is a policy gradient algorithm that uses MC to estimate the expected returns of a policy
-    \item<2-> The algorithms minimize the following loss for an episodic history $h = \{s^0, a^0, r^0, ... s^{T-1}, a^{T-1}, r^{T-1}, s^T\}$:
+    \item \textbf{REINFORCE} is a policy gradient algorithm that uses Monte Carlo (MC) to estimate the expected returns of a policy
+    \item<2-> The algorithm minimizes the following loss for an episodic history $h = \{s^0, a^0, r^0, ... ,s^{T-1}, a^{T-1}, r^{T-1}, s^T\}$:
 \elist
 \vspace{0pt}
 \visible<2->{
     \[
-        \mathcal{L}(\phi) = - \frac{1}{T}\sum_{t=0}^{T-1}\left(\sum_{\tau = 1}^{t-1}\gamma^{\tau-1}\mathcal{R}(s^\tau, a^\tau, s^{\tau+1})\right)log \pi(a^t \mid s^t; \phi)
+        \mathcal{L}(\phi) = - \frac{1}{T}\sum_{t=0}^{T-1}\left(\sum_{\tau = 1}^{t-1}\gamma^{\tau-1}\mathcal{R}(s^\tau, a^\tau, s^{\tau+1})\right) \log \pi(a^t \mid s^t; \phi)
     \]
 }
 
 \blist
-    \item<3-> Note the to-be-minimized loss has a prepended negative sign, as we want to \textbf{maximize} expected returns
+    \item<3-> Note this loss has a negative sign, as we want to \textbf{maximize} expected returns
 \elist    
 \end{frame}
 

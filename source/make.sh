@@ -1,5 +1,6 @@
-echo $SHELL
-BASE_DIR=$(dirname $(cd "$(dirname "$BASH_SOURCE")"; pwd))
-cd $BASE_DIR/source
-pwd
-ls
+#!/bin/bash
+BASE_DIR=$(dirname "$BASH_SOURCE")
+cd "$BASE_DIR"
+for i in marl-book-*.tex; do
+    xelatex $i
+done
