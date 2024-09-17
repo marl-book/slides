@@ -471,18 +471,19 @@ The \textit{state-action} value Bellman equation is therefore:
 \end{frame}
 
 \begin{frame}[fragile]{Policy Iteration Pseudo Code}
-\centering
+
 \scalebox{0.8}{\begin{minipage}{\linewidth}
     \balg{Policy Iteration}{pi}
-        \State Initialize $\pi$ randomly, initialise $V(s)$ arbitrarily for all $s \in S$ except $V(\text{terminal}) = 0$
+        \State Initialize deterministic policy $\pi$ randomly, and $V(s)=0$ for all $s \in S$
         \Repeat
-            \State \textbf{Policy Evaluation:}
+            \State // {\it Iterative Policy Evaluation:}
             \Repeat
                 \For{each state $s$ in $S$}
                     \State $V(s) \gets \sum_{s'} \mathcal{T}(s' | s, \pi(s)) [\mathcal{R}(s, \pi(s), s') + \gamma V(s')]$
                 \EndFor
             \Until{$V(s)$ converges for all $s \in S$}
-            \State \textbf{Policy Improvement:}
+            
+            \State // {\it Policy Improvement:}
             \State policy\_stable $\gets$ true
             \For{each state $s$ in $S$}
                 \State old\_action $\gets \pi(s)$

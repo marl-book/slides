@@ -37,9 +37,9 @@
     
 \end{frame}
 
-\section[t]{Joint Policy and Expected Return}
+\section{Joint Policy and Expected Return}
 
-\begin{frame}{Joint Policy}
+\begin{frame}[t]{Joint Policy}
 
     The \e{joint policy} is the combination of all agents' policies:
     $$\pi = (\pi_1, ..., \pi_n)$$
@@ -58,7 +58,7 @@
     We will use additional notation: 
 
     \blist
-        \item \(\hat{h} = \{(s^{\tau}, o^{\tau}, a^{\tau})_{\tau = 0}^{t-1}, s^t, o^t\}\) is the \fat{full history} containing:\\[3pt]
+        \item \(\hat{h}^t = \{(s^{\tau}, o^{\tau}, a^{\tau})_{\tau = 0}^{t-1}, s^t, o^t\}\) is the \fat{full history} containing:\\[3pt]
         \blist
             \item \(s^\tau\), states up to \(t-1\)
             \item \(o^\tau\), joint observations up to \(t-1\)
@@ -142,9 +142,9 @@
 \begin{bluebox}
 	\fat{Best-response} policy $\pi_i$ maximizes expected return for agent \(i\) against a given set of policies for all other agents, \(\pi_{-i} = (\pi_1, ..., \pi_{i-1}, \pi_{i+1}, ..., \pi_{n})\)
     
-    $$\text{BR}_i(\pi_{-i}) = \argmax_{\pi_{i}} U_i(\langle\pi_i, \pi_{-1}\rangle)$$
+    $$\text{BR}_i(\pi_{-i}) = \argmax_{\pi_{i}} U_i(\langle\pi_i, \pi_{-i}\rangle)$$
         
-    where $\langle\pi_i, \pi_{-1}\rangle$ is the entire \fat{joint policy}
+    where $\langle\pi_i, \pi_{-i}\rangle$ is the complete \fat{joint policy}
 \end{bluebox}
 
 \end{frame}
