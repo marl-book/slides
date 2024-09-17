@@ -43,9 +43,10 @@
         We have already seen two single-agent reductions of the MARL problem:
 
         \blist
-            \item<3-> \fat{Independent learning}: each agent learns its policy independently
+            \item<3-> \fat{Independent learning}: each agent learns its policy independently \\
                 $\rightarrow$ decentralized training and decentralized execution
-            \item<4-> \fat{Central learning}: learn single policy over the joint action space conditioned on joint histories $\rightarrow$ centralized training and centralized execution
+            \item<4-> \fat{Central learning}: learn single policy over the joint action space \\
+            	$\rightarrow$ centralized training and centralized execution
         \elist
 
         \vspace{-1em}
@@ -186,7 +187,7 @@
         \blist
             \item \fat{Non-stationarity}: exacerbated due to changing policies of all agents
             \item \fat{Equilibrium selection}: how to converge to a stable equilibrium?
-            \item \fat{Multi-agent credit assignment}: how to attribute rewards to agents' actions? (especially in common-reward settings)
+            \item \fat{Multi-agent credit assignment}: how to attribute rewards to agents' actions?
             \item \fat{Scaling to many agents}: how to efficiently scale to large numbers of agents?
         \elist
     \end{reminderbox}
@@ -211,9 +212,7 @@
 
     \visible<2->{
         Does this also hold for MARL?
-        \visible<3->{
             Yes, with minor modifications!
-        }
     }
 \end{frame}
 
@@ -387,7 +386,7 @@
                 \caption{Climbing}
             \end{figure}
         \end{minipage}
-        \begin{minipage}{.4\textwidth}
+        \begin{minipage}{.42\textwidth}
             The Stag Hunt and Climbing matrix games have multiple equilibria.\\
             \dag: Pareto-dominated equilibria\\
             \ddag: Pareto-optimal equilibria
@@ -413,7 +412,7 @@
         \begin{column}{.60\textwidth}
             \blist
                 \item<2-> All agents prefer the Pareto-optimal equilibrium
-                    \item<2-> \fat{But} deviation from the equilibrium by any agent results in lower returns $\rightarrow$ e.g. risk of receiving -30 if one agent deviates from action A to action B
+                    \item<2-> \fat{But} deviation from the equilibrium by any agent results in lower returns $\rightarrow$ e.g. risk of receiving -30 if one agent deviates from A to B
             \elist
 
             \vspace{-.5em}
