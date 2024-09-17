@@ -26,7 +26,7 @@
 
 \begin{frame}[t]{Deep Q-Learning}
 
-For \fat{deep }Q-learning, we use a neural network to approximate the $Q$ function.
+For \fat{deep} Q-learning, we use a neural network to approximate the $Q$ function.
 \vspace{5pt}
 \begin{columns}
     \begin{column}{0.4\textwidth}
@@ -115,7 +115,7 @@ For \fat{deep }Q-learning, we use a neural network to approximate the $Q$ functi
 \vspace{.5em}
 
 \visible<2->{
-    This naive application of neural networks to RL algorithms suffers from several challenges.
+    This naive application of neural networks to RL algorithms has some problems.
 }
     
 \end{frame}
@@ -125,7 +125,7 @@ For \fat{deep }Q-learning, we use a neural network to approximate the $Q$ functi
 \vspace{-0.5em}
 
 \begin{problembox}
-    The \e{moving target problem} arises from the bootstrapped targets:
+    \e{Moving target problem} arises from the bootstrapped targets:
     \vspace{-1em}
     \[
         y^t = r^t + \gamma \max_{a'} Q(s^{t+1}, a'; \theta)
@@ -144,7 +144,7 @@ For \fat{deep }Q-learning, we use a neural network to approximate the $Q$ functi
 
 \visible<3->{
     \begin{solutionbox}
-        One potential solution is to use a \textbf{target network} with parameters $\bar{\theta}$, which are updated less frequently than our $Q$ network's parameters $\theta$  
+        One solution is to use a \textbf{target network} with parameters $\bar{\theta}$ that are updated less often than our $Q$ network's parameters $\theta$  
     \end{solutionbox}
 }
           
@@ -153,7 +153,7 @@ For \fat{deep }Q-learning, we use a neural network to approximate the $Q$ functi
 \begin{frame}[t]{Correlation of Consecutive Experiences}
 
 \blist
-    \item Most ML algorithms using NNs assume i.i.d data
+    \item Most ML algorithms using NNs assume i.i.d. data
     \item In RL, we collect data by interacting with an MDP with $s^{t+1} \sim \Stf(\st^t, \ac^t)$ $\rightarrow$ \fat{not} i.i.d
 \elist
 \vspace{0cm}
@@ -193,7 +193,7 @@ For \fat{deep }Q-learning, we use a neural network to approximate the $Q$ functi
 
 \visible<3->{
     \begin{solutionbox}
-        We train on samples of previous experiences stored in a \textbf{replay buffers}.
+        We train on samples of previous experiences stored in a \textbf{replay buffer}.
     \end{solutionbox}
 }
     
@@ -305,7 +305,7 @@ For \fat{deep }Q-learning, we use a neural network to approximate the $Q$ functi
 
     \blist
         \item This can be achieved with minimal changes in DQN
-        \item DDQN  uses the primary Q-network (with parameters $\theta$) to select actions while using the target network (with parameters $\bar{\theta}$) to estimate the value of actions
+        \item DDQN  uses the primary Q-network (with parameters $\theta$) to select actions while using the target network (with parameters $\bar{\theta}$) to estimate action values
         \item The target thus becomes:
     \elist
     \vspace{0pt}
@@ -368,13 +368,13 @@ For \fat{deep }Q-learning, we use a neural network to approximate the $Q$ functi
 
 \begin{frame}[t]{Policy Gradients}
 
-So far, we have considered a parameterized value function, but we can also directly parameterize the policy $\pi$.
+We considered a parameterized value function, but we can also directly parameterize the policy $\pi$.
 
 \blist
-    \item For instance, we can use a NN for our policy $\pi$ with parameters $\phi$. 
-    \item The policy network receives a state $s$ as input and outputs a scalar value for each action
-    \item These scalars $l(s, a)$ represent the preference of the policy to select action $a$ in state $s$
-    \item<2-> These preferences are then transformed into a probability distribution across the action space using a \fat{softmax} function:
+    \item Use a NN for policy $\pi$ with parameters $\phi$
+    \item Policy network receives state $s$ as input and outputs a scalar value for each action
+    \item Scalars $l(s, a)$ represent the preference of the policy to select action $a$ in state $s$
+    \item<2-> Preferences are then transformed into a probability distribution across the action space using a \fat{softmax} function:
 \elist
 
 \vspace{-1em}
@@ -410,32 +410,30 @@ So far, we have considered a parameterized value function, but we can also direc
 \blist
     \item<1-> $\epsilon$-greedy policies struggle to represent diverse probabilistic policies
     \item<2-> Policy gradient algorithms allow us to represent \textbf{any} probabilistic policy
-    \item<3-> Policy gradients are also effective for representing continuous action spaces
+    \item<3-> Policy gradients are also effective for representing {\bf continuous} action spaces
 \elist
 
 \end{frame}
 
 \begin{frame}[t]{Policy Gradient Theorem}
 
-How do we update parameters $\phi$ of the policy? Using the \textbf{policy gradient theorem}, we can express the gradient of the performance of a policy with respect to the parameter $\phi$ of the policy.
-
-\vspace{0pt}
+How to update parameters $\phi$ of the policy? Using the \textbf{policy gradient theorem}, we can express the gradient of the performance of a policy with respect to the parameter $\phi$ of the policy.
 \[
 \nabla_{\phi} J(\phi) \propto \sum_{s \in S} \Pr(s \mid \pi) \sum_{a \in A} Q^{\pi}(s, a) \nabla_{\phi} \pi(a \mid s; \phi)
 \]
 
 \only<1>{
 \blist
-    \item $J$ represents a function measuring the quality policy $\pi$
+    \item $J$ is a function measuring the quality of policy $\pi$
     \item $Pr(s \mid \pi)$ is the state-visitation distribution for policy $\pi$
     \item $Q^\pi(s, a)$ is the value for a given action and state under $\pi$
-    \item The $J$ function is similar to a loss function with the key difference that we aim to \textbf{maximize} rather than minimize it
+    \item The $J$ function is similar to a loss function, with the difference that we aim to \textbf{maximize} rather than minimize it
 \elist
 }
 
 \only<2->{
 \begin{notebox}
-    The policy gradient theorem assumes that $Pr(s \mid \pi)$ are given under the currently optimized policy $\pi$ $\rightarrow$ needs \fat{on-policy} data
+    The policy gradient theorem assumes that $Pr(s \mid \pi)$ are given under the currently optimized policy $\pi$ $\rightarrow$ this needs \fat{on-policy} data
 \end{notebox}
 }
 
