@@ -227,11 +227,11 @@
     \end{solutionbox}
 
     \visible<3->{
-        $\rightarrow$ Derive policy update rules by finding estimators for expected returns $Q_i^\pol(\fhis, \con{\ac_i, \jac_{-i}})$.
+        Derive policy update rules by finding estimators for expected return $Q_i^\pol(\fhis, \con{\ac_i, \jac_{-i}})$
     }
 
     \visible<4->{
-        We have already seen independent A2C that estimates $Adv(\his_i, \ac_i) \approx Q_i^\pol(\fhis, \con{\ac_i, \jac_{-i}})$.
+        We have already seen independent A2C that estimates $Adv(\his_i, \ac_i) \approx Q_i^\pol(\fhis, \con{\ac_i, \jac_{-i}})$
     }
 
     \visible<5->{
@@ -478,11 +478,11 @@
 \section{Value Decomposition in Common-Reward Games}
 
 \begin{frame}[t]{Centralized Value Functions in Value-Based MARL}
-    We addressed MARL challenges in policy gradient algorithms by leveraging centralized critics. Can we also use centralized value functions in value-based MARL algorithms?
+    We addressed MARL challenges in policy gradient algorithms by using centralized critics. Can we also use centralized value functions in value-based MARL algorithms?
 
     \visible<2->{
         \begin{problembox}
-            In value-based MARL algorithms, e.g.\ IDQN, agents learn value functions and derive their policy from them. However, learning and deriving a policy from centralized value functions would prevent decentralized execution.
+            In value-based MARL algorithms (e.g.\ IDQN) agents learn value functions and derive their policy from them. However, learning and deriving a policy from centralized value functions would prevent decentralized execution.
         \end{problembox}
     }
 
@@ -509,7 +509,7 @@
 \end{frame}
 
 \begin{frame}[t]{Individual-Global-Max Property}
-    How do we ensure that decentralized action selection with respect to the agents' individual utility functions leads to effective joint actions with respect to the decomposed centralized action-value function?
+    How to ensure that decentralized action selection with respect to the agents' individual utility functions leads to effective joint actions with respect to the centralized action-value function?
 
     \visible<2->{
         \begin{solutionbox}
@@ -611,12 +611,13 @@
 
     \vspace{-1em}
 
-    The centralized action-value function is monotonic with respect to individual utilities if all weights of $f_{\text{mix}}$ are positive $\rightarrow$ ensure positive weights by obtaining the parameters of the mixing function from a hypernetwork $f_{\text{hyper}}$ conditioned on centralized information $\ci$
+    The centralized action-value function is monotonic with respect to individual utilities if all weights of $f_{\text{mix}}$ are positive \\
+    $\Rightarrow$ Ensure positive weights by obtaining the parameters of the mixing function from a hypernetwork $f_{\text{hyper}}$ conditioned on centralized information $\ci$
 
 \end{frame}
 
 \begin{frame}[t]{QMIX Optimisation}
-    The parameters of all utility functions and the hypernetwork are jointly optimised by minimising the following loss on batches of experiences $\batch$ sampled from a replay buffer:
+    Parameters of all utility functions and hypernetwork are jointly optimised by minimising the following loss on batches of experiences $\batch$ sampled from a replay buffer:
     \begin{equation*}
         \loss(\theta) = \frac{1}{\batchsize} \sum_{(\his^t, \ci^t, \jac^t, \rew^t, \his^{t+1}, \ci^{t+1}) \in \batch} \left(\rew^t + \dsc \max_{\jac\in\Ac}{Q(\his^{t+1}, \ci^{t+1}, \jac; \bar\theta)} - Q(\his^t, \ci^t, \jac^t; \theta)\right)^2
     \end{equation*}
@@ -669,7 +670,7 @@
 % \end{frame}
 
 \begin{frame}[t]{Value Decomposition in Matrix Games}
-    To better understand how value decomposition works in practise, we will look at several exemplary tasks and the learned decompositions of both VDN and QMIX.
+    To better understand how value decomposition works in practise, we will look at several exemple tasks and the learned decompositions of both VDN and QMIX.
 
     \visible<2->{
         \begin{minipage}{0.25\textwidth}
@@ -848,7 +849,7 @@
 \begin{frame}[t]{Value Decomposition in LBF}
     % (a) Visualization of the \lbf environment with two agents collecting three items in a $8\times8$ grid-world. The levels and starting locations of agents and items are randomized for each episode lasting up to twenty-five steps, and agents are rewarded with a shared reward for collecting up items. (b) Learning curves for IDQN, VDN, and QMIX in the \lbf environment. All algorithms are trained for two million environment steps using a learning rate of $\alpha = 3\cdot10^{-4}$, a batch size of 128, and a discount factor of $\dsc = 0.99$. The DQN value functions and individual utilities of VDN and QMIX are represented by a two-layer feedforward neural network with sixty-four hidden units and the ReLU activation function. The mixing network of QMIX is a two-layer feedforward neural network with thirty-two hidden units. All networks are shared between both agents \seehere{sec:parameter-sharing}. Target networks are updated every two hundred steps and the replay buffer contains the last \num{100000} transitions. All agents explore with an $\epsilon$-greedy policy with $\epsilon$ linearly annealed from $1$ to $0.05$ over training and a fixed $\epsilon=0.05$ being used during evaluation. Visualized learning curves and shading correspond to the mean and standard deviation across evaluation returns across five runs with different random seeds.
 
-    So far, we looked at simple single-step matrix games. We will now compare IDQN, VDN and QMIX in a common-reward level-based foraging task where two agents need to collect three items in a $8\times8$ grid world:
+    Now compare IDQN, VDN and QMIX in a common-reward level-based foraging task where two agents need to collect three items:
 
     \begin{figure}
         \centering
