@@ -29,7 +29,7 @@
 For \fat{deep} Q-learning, we use a neural network to approximate the $Q$ function.
 \vspace{5pt}
 \begin{columns}
-    \begin{column}{0.4\textwidth}
+    \begin{column}{0.5\textwidth}
     \vspace{0pt}%
         \includegraphics[width=\textwidth]{images/chapter_8/dqn_architecture.pdf}
     \end{column}\hfill
@@ -490,7 +490,8 @@ To apply the policy gradient theorem, we must find a way to derive expected retu
 \vspace{0pt}
 \visible<2->{
     \[
-        \mathcal{L}(\phi) = - \frac{1}{T}\sum_{t=0}^{T-1}\left(\sum_{\tau = 1}^{t-1}\gamma^{\tau-1}\mathcal{R}(s^\tau, a^\tau, s^{\tau+1})\right) \log \pi(a^t \mid s^t; \phi)
+        % \mathcal{L}(\phi) = - \frac{1}{T}\sum_{t=0}^{T-1}\left(\sum_{\tau = 1}^{t-1}\gamma^{\tau-1}\mathcal{R}(s^\tau, a^\tau, s^{\tau+1})\right) \log \pi(a^t \mid s^t; \phi)
+        \loss(\phi) = - \frac{1}{T} \sum_{t=0}^{T-1} \left(\sum_{\tau=t}^{T-1} \dsc^{\tau-t} \rew^{\tau}\right) \log \pol(\ac^t \mid \st^t; \phi)
     \]
 }
 
