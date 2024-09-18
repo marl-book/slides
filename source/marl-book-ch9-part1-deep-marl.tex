@@ -445,10 +445,11 @@
         \begin{equation*}
             \pi_{-i}^+ \in \argmax_{\jac_{-i}}Q(\his^{t}_i, \ci^t, \con{\ac^t_{i}, \jac_{-i}})
         \end{equation*}
-        \vspace{-.5em}
+        \vspace{-1em}
+        
     }
     \visible<4->{
-        During training, agent $i$ optimises its policy $\pol_i$ by minimising the following loss:
+    	During training, agent $i$ optimises its policy $\pol_i$ by minimising the following loss:
         \begin{equation*}
             \mathcal{L}(\phi_i) 
             = -\ex{\ac^t_i\sim\pol_i, \ac^t_{-i}\sim\pol^+_{-i}}{\log\pol(\ac^t_i \mid \his_i^{t}; \phi_i) \left(Q^{\pi^+}(\his^{t}_i, \ci^t, \con{a_i^t, a_{-i}^t}; \theta_i^q)  -V^{\pi^+}(\his^{t}_i, \ci^t; \theta_i^v)\right)}
