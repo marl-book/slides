@@ -36,7 +36,7 @@ For \fat{deep} Q-learning, we use a neural network to approximate the $Q$ functi
     \begin{column}{0.6\textwidth}
     \vspace{0pt}%
         \blist
-            \item<1-> To train this we could define a loss function $\mathcal{L}(\theta) = \left(y^t - Q(s^t,a^t;\theta) \right)$
+            \item<1-> To train this we could define a loss function $\mathcal{L}(\theta) = \left(y^t - Q(s^t,a^t;\theta) \right)^2$
             \item<1-> But unlike supervised learning, we are not given $y^t$ beforehand
             \item <2->We can use the Q-learning update rule to define our $y^t$
         \elist
@@ -218,7 +218,7 @@ For \fat{deep} Q-learning, we use a neural network to approximate the $Q$ functi
         \item<2-5> Compute target estimates with target network parameters $\bar{\theta}$:
             \vspace{-.5em}
             \[
-                y^t \gets r^t + \gamma \max_{a'} Q(s^t+1, a'; \bar{\theta})
+                y^t \gets r^t + \gamma \max_{a'} Q(s^{t+1}, a'; \bar{\theta})
             \]
             \vspace{-2em}
         \item<3-5> Select actions according to the "main" value network $\rightarrow$ $a^t \in \arg\max_a Q(s^t, a; \theta)$
@@ -536,7 +536,7 @@ To apply the policy gradient theorem, we must find a way to derive expected retu
             \item The REINFORCE policy loss then becomes
         \elist
         \[
-        \mathcal{L}(\phi) = - \frac{1}{T}\sum_{t=0}^{T-1}\left(u(h^t)-V(s^t; \theta)\right)log \pi(a^t \mid s^t; \phi)
+        \mathcal{L}(\phi) = - \frac{1}{T}\sum_{t=0}^{T-1}\left(u(h^t)-V(s^t; \theta)\right) \log \pi(a^t \mid s^t; \phi)
         \]
     \end{solutionbox}
 }

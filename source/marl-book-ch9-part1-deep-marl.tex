@@ -17,7 +17,6 @@
     \item Training and execution modes
     \item Independent learning with deep reinforcement learning
     \item Multi-agent policy gradient algorithms
-    \item Policy gradient algorithms
     \item Value decomposition in common-reward games
     % \item Agent modeling with deep learning
     % \item Parameter and experience sharing
@@ -232,7 +231,7 @@
     }
 
     \visible<4->{
-        We have already seen independent A2C that estimates $Adv(\his_i, \ac_i) \propto Q_i^\pol(\fhis, \con{\ac_i, \jac_{-i}})$.
+        We have already seen independent A2C that estimates $Adv(\his_i, \ac_i) \approx Q_i^\pol(\fhis, \con{\ac_i, \jac_{-i}})$.
     }
 
     \visible<5->{
