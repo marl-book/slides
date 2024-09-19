@@ -36,9 +36,9 @@
 
     \pause
 
-    \begin{problembox}
+    \begin{redbox}
         Can we provide agents with more \fat{explicit} information about the policies of other agents so they can learn to coordinate better, e.g.\ by learning best-response policies?
-    \end{problembox}
+    \end{redbox}
 \end{frame}
 
 \begin{frame}[t]{Recap: Agent Modeling}
@@ -54,12 +54,12 @@
             \imgw{images/chapter6/agentmodel.pdf}{0.90} \\[1.5em]
         \end{center}
 
-        S. Albrecht, P. Stone. \bf Autonomous Agents Modelling Other Agents: A Comprehensive Survey and Open Problems. {\it Artificial Intelligence}, 2018
+        S. Albrecht, P. Stone. {\bf Autonomous Agents Modelling Other Agents: A Comprehensive Survey and Open Problems.} {\it Artificial Intelligence}, 2018
     \end{reminderbox}
 \end{frame}
 
 \begin{frame}[t]{Recap: Tabular Agent Modeling}
-    In Chapter 6, we modeled other agents' policies as stationary distributions by maintaining tables of applied action frequencies for each states
+    In Chapter 6, we modeled other agents' policies as stationary distributions by maintaining tables of action frequencies for each state
 
     \pause
 
@@ -70,7 +70,7 @@
     \pause
 
     \begin{solutionbox}
-        As for value functions, we can use \fat{deep learning} to learn generalisable agent models!
+        Use \fat{deep learning} to learn generalisable agent models!
     \end{solutionbox}
 \end{frame}
 
@@ -95,7 +95,7 @@
     How to do this with deep learning for partially observable environments (POSG)?
     \blist
         \item<2-> Represent agent $i$'s model of agent $j$ as a neural network: $\agmod^i_{j}(\ac_{j} \mid \his_i; \phi^i_j)$
-        \item<2-> Given the observation history of agent $i$, its model $\agmod^i_{j}(\ac_{j} \mid \his_i; \phi^i_j)$ for agent $j$ outputs a probability distribution over its actions
+        \item<2-> Given the observation history of agent $i$, its model $\agmod^i_{j}(\ac_{j} \mid \his_i; \phi^i_j)$ for agent $j$ outputs a probability distribution over actions
         \item<3-> Agent $i$ can train its model for agent $j$ by minimizing the cross-entropy loss between the predicted policy $\agmod_j^i$ and the observed actions of agent $j$:
             \bmath
                 \loss(\phi^i_j) = \ex{\ac_j^t \sim \pol_j(\his_j^t)}{- \log \agmod^i_j(\ac_j^t \mid \his_i^t; \phi^i_j)}
@@ -132,9 +132,6 @@
     \emath
 
 \end{frame}
-
-\begin{frame}[t]{Joint-Action Learning with \fat{Deep} Agent Models}
-    \end{frame}
 
 \begin{frame}[t]{Joint-Action Learning with \fat{Deep} Agent Models in LBF}
     \begin{figure}[t]
@@ -173,7 +170,7 @@
         \includegraphics[width=.65\textwidth]{images/chapter_9/agent_modelling_encoder_decoder}
     \end{figure}
 
-    Agent $i$ trains encoder-decoder architecture with ...
+    Agent $i$ trains encoder-decoder architecture with
     \blist
         \item \e{Encoder $f^e$} with parameters $\psi^e_i$: given observation history $\his^t_i$ of agent $i$, output compact representation $m_i^t$ of the policies of other agents
         \item \e{Decoder $f^d$} with parameters $\psi^d_i$: given compact representation $m_i^t$, predict the policies $\hat{\pol}_{-i}^{i,t}$ of other agents
@@ -183,21 +180,21 @@
 
     \vspace{-.5em}
     
-    Then, agent $i$ can condition its policy on the obtained compact representations $m^t_i$.
+    Then, agent $i$ can condition its policy on the compact representations $m^t_i$.
 \end{frame}
 
-\begin{frame}[t]{Learning Compact Representations of Agent Policies}
+\begin{frame}{Learning Compact Representations of Agent Policies}
     The encoder and decoder are jointly trained to minimize the cross-entropy loss for the predicted action probabilities and true actions of all other agents:
 
     \bmath
-        \loss(\psi_i^e, \psi_i^d) = \sum_{j\neq i} -\log \hat{\pol}_j^{i,t}(\jac_j^t) \text{\ with\ } \hat{\pol}_j^{i,t} = f^d\left(f^e(\his_i^t; \psi_i^e); \psi_i^d\right)_j
+        \loss(\psi_i^e, \psi_i^d) = \sum_{j\neq i} -\log \hat{\pol}_j^{i,t}(\jac_j^t) \text{\quad with \quad} \hat{\pol}_j^{i,t} = f^d\left(f^e(\his_i^t; \psi_i^e); \psi_i^d\right)_j
     \emath
 
     \pause
 
-    \begin{solutionbox}
-        Encoder-decoder agent models can be integrated into any MARL algorithm by conditioning trained value functions and policies on the obtained policy representations.
-    \end{solutionbox}
+    \begin{greenbox}
+        Encoder-decoder agent models can be integrated into MARL algorithm by conditioning value functions and policies on the obtained policy representations.
+    \end{greenbox}
 \end{frame}
 
 \begin{frame}[t]{Compact Agent Policy Representations in LBF}
@@ -227,9 +224,9 @@
     \vspace{-2em}
 
     \begin{notebox}
-        So far, we used the ground truth actions as information to encode by using them as targets for the decoder. Instead or in addition, we could use
+        We used the ground truth actions as information to encode by using them as targets for the decoder. We could also use
         \blist
-            \item Observations -- try capture information that other agents have access
+            \item Observations -- try to capture information that other agents have access to
             \item Rewards -- try to predict the objectives that other agents optimise for
             \item \ldots
         \elist
@@ -240,16 +237,16 @@
 
 \begin{frame}[t]{Parameter and Experience Sharing -- Motivation}
     \begin{problembox}
-        Training agents with MARL becomes difficult for environments with many agents due to the increased number of parameters to train, resulting in unstable or slow training. How can we reduce these challenges?
+        Training agents with MARL is difficult for environments with many agents due to the increased number of parameters to train $\Rightarrow$ unstable or slow training!
     \end{problembox}
 
     \pause
 
     \begin{solutionbox}
-        We will look at two approaches to improve the efficiency of training many agents:
+        Two approaches to improve the efficiency of training many agents:
         \blist
-            \item \fat{Parameter sharing}: Agents share their network parameters with each other
-            \item \fat{Experience sharing}: Agents share experiences with each other
+            \item \fat{Parameter sharing}: agents share their network parameters with each other
+            \item \fat{Experience sharing}: agents share experiences with each other
         \elist
     \end{solutionbox}
 \end{frame}
@@ -259,7 +256,7 @@
         \item Parameter and experience sharing assume that agents are trying to learn similar or identical policies $\rightarrow$ not applicable to all environments
         \item We call agents in such environments \e{homogeneous}
         \blist
-            \item<2-> \e{Strongly homogeneous agents}: All agents have the same optimal policy, i.e. $\pol_1^* = \ldots = \pol_n^*$
+            \item<2-> \e{Strongly homogeneous agents}: All agents have the same optimal policy, i.e. $$\pol_1^* = \ldots = \pol_n^*$$
             \item<3-> \e{Weakly homogeneous agents}: Agents can be permuted and their expected returns remain the same under the permutation $\sigma: I \mapsto I$:
                 \bmath
                     \exret_i(\pi)= \exret_{\sigma(i)}\left(\langle\pi_{\sigma(1)},\pi_{\sigma(2)},\dots,\pi_{\sigma(n)}\rangle\right),\ \forall i \in I 
@@ -296,7 +293,7 @@
 \end{frame}
 
 \begin{frame}[t]{Parameter Sharing}
-    Sharing network parameters across agents is a common practice to make MARL training more efficient. We can share parameters across value functions, policies, or both.
+    Sharing network parameters across agents is common practice to make MARL training more efficient. Share parameters across value functions, policies, or both.
 
     \only<1>{
         \begin{figure}
@@ -356,7 +353,7 @@
 %     However, in practice, this is often not sufficient for agents to learn meaningfully diverse/ specialised policies or value functions.
 % \end{frame}
 
-\begin{frame}[t]{Experience Sharing for Weakly Homogeneous Agents}
+\begin{frame}{Experience Sharing for Weakly Homogeneous Agents}
     Under experience sharing, agents still learn separate policies (and value functions) but share their trajectories to allow training on the collective data.
 
     \pause
@@ -370,7 +367,7 @@
     \end{notebox}
 \end{frame}
 
-\begin{frame}[t]{Deep Q-Networks with Shared Experience Replay}
+\begin{frame}{Deep Q-Networks with Shared Experience Replay}
     We can extend IDQN with experience sharing by following the steps below:
     \blist
         \item Collect the experience of all agents in a shared replay buffer $\data_{\text{shared}}$
@@ -443,12 +440,8 @@
         \item<4-> \fat{Long horizon:} episodes can last for many time steps before reaching a terminal state
     \elist
 
-    \pause
-    \pause
-    \pause
-    \pause
-
-    Fortunately, we can exploit the structure of these games to develop effective algorithms.
+	\visible<5->{
+	    Fortunately, we can exploit the structure of these games to develop effective algorithms.}
 \end{frame}
 
 \begin{frame}[t]{Tree Search for Zero-Sum Games}
@@ -465,11 +458,11 @@
         \only<2>{
             We can view turn-based zero-sum games as trees where
             \blist
-                \item Nodes represent game states
-                \item Edges represent actions
-                \item Leaves represent terminal states
+                \item {\it nodes} represent game states
+                \item {\it edges} represent actions
+                \item {\it leaves} represent terminal states
             \elist
-            and in each node either agent $1$ or agent $2$ makes a move.
+            in each node either agent $1$ or agent $2$ makes a move.
         }
         \only<3>{
             \begin{problembox}
@@ -488,7 +481,7 @@
 
 \begin{frame}[t]{Monte Carlo Tree Search (MCTS)}
     % explain MCTS  -- might be multiple slides
-    \e{Monte Carlo Tree Search} (MCTS) is a commonly used tree-search algorithm based on simulating possible outcomes of the game, and then updating value estimates of actions.
+    \e{Monte Carlo Tree Search} (MCTS) is a tree-search algorithm that simulates (samples) possible outcomes of the game, and then updating value estimates of actions.
 
     \pause
 
@@ -738,19 +731,20 @@
     \elist
 \end{frame}
 
-\begin{frame}[t]{Population-Based Training -- Overview}
-    First, initialize a population of policies for each agent (e.g.\ random policies).\\
-
-    \pause
+\begin{frame}{Population-Based Training -- Overview}
+    First, initialize a population of policies for each agent (e.g.\ random policies).
+    
+    \vspace{10pt}
 
     For each generation, population-based training then follows two steps:
     \blist
-        \item \fat{Evaluation:} evaluate the performance of the policies in the population by playing games against policies of the current populations of all other agents
-        \item \fat{Evolution:} based on evaluation results, evolve the populations of all agents. This can be done by selecting a subset of high-performing policies, mutating existing policies, or adding new policies to the population.
+        \item<2-> \fat{Evaluation:} evaluate the performance of the policies in the population by playing games against policies of the current populations of all other agents
+        
+        \item<3-> \fat{Evolution:} based on evaluation results, evolve the populations of all agents. This can be done by selecting a subset of high-performing policies, mutating existing policies, or adding new policies to the population.
     \elist
-
-    \pause
-    This process is repeated until convergence or for a fixed number of generations.
+    
+    \visible<4->{
+    This process is repeated until convergence or for a fixed number of generations.}
 \end{frame}
 
 \begin{frame}[t]{Policy Space Response Oracles (PSRO)}
@@ -762,7 +756,7 @@
         \begin{column}{0.65\textwidth}
             \begin{enumerate}
                 \item<2-> Initialize populations of random policies for each agent
-                \item<3-> Construct a \fat{meta-game} $M^k$ at generation $k$ from the populations of all agents as a stateless single-step general-sum game with
+                \item<3-> Construct a \fat{meta-game} $M^k$ at generation $k$ from the populations of all agents as a (non-repeated) normal-form game with
                     \blist
                         \item Actions: policies of agent populations, i.e.\ $\Ac_i = \Pol_i^k$
                         \item Rewards: returns of joint policies $\langle \pol_1, \ldots, \pol_n \rangle$, i.e.\ $\Rew_i(\pol_1, \ldots, \pol_n) = \exret_i(\pol_1, \ldots, \pol_n)$.
@@ -817,7 +811,7 @@
 
         \pause
 
-        Solution to the meta-game: distributions $\delta_i^k$ over policies in the population of agent $i$ for each agent $i\in\Ag$ that satisfies the solution concept.
+        Solution to the meta-game: distributions $\delta_i^k$ over policies in the population of agent $i$ (for each agent $i\in\Ag$).
 
         % \pause
         % \begin{notebox}
@@ -898,7 +892,7 @@
     \end{figure}
 \end{frame}
 
-\begin{frame}[t]{AlphaStar -- GrandMaster in StarCraft II}
+\begin{frame}{AlphaStar -- GrandMaster in StarCraft II}
     StarCraft II is a real-time strategy game for two or more players in which players have to collect resources, build infrastructure and armies to defeat their opponents.
 
     \only<1>{
@@ -911,7 +905,7 @@
 
     \pause
 
-    Similar as for two-player board games, StarCraft II is challenging due to
+    StarCraft II is challenging due to
     \blist
         \item<2-> \fat{Sparse rewards:} players only receive a terminal reward at the end of the game
         \item<2-> \fat{Large action space:} players choose between many actions constituting of a type (e.g., build, move, attack), which unit should execute the action, and the target of the action
