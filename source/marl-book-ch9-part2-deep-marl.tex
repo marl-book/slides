@@ -79,7 +79,7 @@
         We have already seen \e{joint-action learning with agent models} (JAL-AM)
 
         \blist
-            \item<2-> Agents learn models of other agents $j$ conditioned on states $\st$: $\agmod_{-i}(\jac_{-i} \mid \st)$
+            \item<2-> Agents learn models of other agents conditioned on states $\st$: $\agmod_{-i}(\jac_{-i} \mid \st)$
             \item<3-> Agents learn value functions conditioned on the joint action: $Q_i(\st, \jac)$
             \item<4-> Using the value function and agent models, agent $i$ can compute its expected action values under the current models of other agents:
                 \bmath
@@ -487,7 +487,7 @@
 
     MCTS consists of three key steps that are repeated:
     \blist
-        \item<3-> \fat{Simulation} simulate a game from the current state until a leaf node is reached
+        \item<3-> \fat{Simulation:} simulate a game from the current state until a leaf node is reached
         \item<4-> \fat{Expansion:} expand the tree by adding a new node for the reached state if it does not exist yet
         \item<5-> \fat{Backpropagation:} update the estimated values of the nodes visited during the selection step
     \elist
