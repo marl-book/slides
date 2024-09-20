@@ -211,9 +211,10 @@
 \section{Part 2: Reinforcement Learning Basics}
 
 	\begin{frame}{What is Reinforcement Learning?}
-		\bblock{Reinforcement learning (RL):}
+		\begin{graytitlebox}{Reinforcement learning (RL)}
 			Learning to solve sequential decision problems via \e{repeated interaction with environment} %(trial and error)
-		\eblock
+		\end{graytitlebox}
+		\vspace{10pt}
 		\blist
 			\item What is a sequential decision problem?
 			\item What does it mean to ``solve'' the problem?
@@ -233,7 +234,7 @@
 		\end{center}
 	\end{frame}
 	
-\begin{frame}{Back to RL Basics}
+\begin{frame}{RL Problem Definition}
 
     \begin{center}
         \includegraphics[width=0.9\textwidth]{images/chapter_2/rl-learning-problem.pdf}
@@ -253,7 +254,9 @@
     
 \end{frame}
 
-\begin{frame}{MDP Definition}
+\begin{frame}{Markov Decision Process --  Definition}
+	\vspace{10pt}
+	
   \bcol
 
     \col{0.5}
@@ -316,6 +319,8 @@
 \end{frame}
 
 \begin{frame}[t]{Mars Rover MDP Example}
+	\vspace{10pt}
+	
     \bcol
     
       \col{0.58}
@@ -336,7 +341,7 @@
 
 \begin{frame}{Expected Discounted Returns}
 
-    Using RL, learn policy $\pi$ that maximizes the expected \textbf{return}.
+    Using RL, learn policy $\pi$ that maximizes the expected \textbf{return}:
 
     \blist
         \item Returns are the sum of rewards received over time
@@ -349,12 +354,12 @@
 
     \blist
         \item $\gamma$ is the discount factor, such that $\gamma \in [0, 1]$
-        \item $\pi$ is the policy that determines which actions are chosen.
+        \item $\pi$ is the policy that determines which actions are chosen
     \elist
 \end{frame}
 
 \begin{frame}{State-Value Functions}
-    \textbf{State-value} functions $V^{\pi}(s)$ give the 'value' of state $s$ when following the policy $\pi$. 
+    \textbf{State-value} functions $V^{\pi}(s)$ give the 'value' of state $s$ when following the policy $\pi$:
     \begin{align*}
     V^{\pi}(s) = \mathbb{E}_\pi \left[u^{t} | s^{t} = s \right]
     \end{align*}
@@ -386,7 +391,7 @@
 \end{frame}
 
 \begin{frame}{State-Action Value Function}
-    \textbf{State-action} value functions $Q^{\pi}(s,a)$ are an extension on the \textit{State} value functions. They condition the expected return on the current state and the action taken.
+    \textbf{State-action} value functions $Q^{\pi}(s,a)$ are an extension on the \textit{State} value functions. They condition the expected return on the current state and the action taken:
     \begin{align*}
          Q^{\pi}(s,a) = \mathbb{E}_{\pi}\left[u^{t}|s^{t}=s, a^{t}=a\right]
     \end{align*}
@@ -748,15 +753,15 @@ $$
 
 \fat{We covered:}
 \blist
-    \item Intro to Multi-Agent Systems and MARL
+    \item Intro to multi-agent systems and MARL
     \item MDPs
-    \item Value Functions
-    \item Dynamic Programming
-    \item Temporal Difference Learning (SARSA and Q-Learning)
+    \item Value functions
+    \item Dynamic programming
+    \item Temporal-difference learning
 \elist
 \fat{Next we'll cover:}
 \blist
-    \item Games: Models of Multi-Agent Interaction
+    \item Games: models of multi-agent interaction
 \elist
 
 \end{frame}
