@@ -210,16 +210,36 @@
 
 \section{Part 2: Reinforcement Learning Basics}
 
+	\begin{frame}{What is Reinforcement Learning?}
+		\bblock{Reinforcement learning (RL):}
+			Learning to solve sequential decision problems via \e{repeated interaction with environment} %(trial and error)
+		\eblock
+		\blist
+			\item What is a sequential decision problem?
+			\item What does it mean to ``solve'' the problem?
+			\item What is learning by interaction?
+		\elist
+	\end{frame}
 
+	\begin{frame}[t]{What is Reinforcement Learning?}
+		\e{Agent} takes \e{actions} in \e{environment}
+		\blist
+			\item Take action, observe new \e{state} and \e{reward} from environment
+			\item Goal is to maximise total rewards received
+			\listtab Learning: find best actions by {\it trying} them
+		\elist
+		\begin{center}
+			 \includegraphics[width=0.6\textwidth]{images/chapter_2/RL-loop.pdf}
+		\end{center}
+	\end{frame}
+	
 \begin{frame}{Back to RL Basics}
 
-    \begin{figure}
-        \centering
+    \begin{center}
         \includegraphics[width=0.9\textwidth]{images/chapter_2/rl-learning-problem.pdf}
-    \end{figure}
+    \end{center}
 
     \blist
-        \item RL algorithms learn solutions for sequential decision problems via repeated environment \textbf{interaction}
         \item Sequential decision process is defined formally as \e{Markov decision process} (MDP)
         \item Goal is to learn an optimal decision policy for a specific learning objective
     \elist
@@ -314,33 +334,12 @@
     \ecol
 \end{frame}
 
-\begin{frame}{RL for Optimizing Policies in MDPs}
-
-        \centering
-        \includegraphics[width=0.6\textwidth]{images/chapter_2/RL-loop.pdf}
-
-	\vspace{2em}
-
-    \bcol
-        \col{0.47}
-            \e{\fat{Value-Based RL}} \\
-            Indirectly optimize the policy by learning value functions.
-
-        \col{0.47}
-            \e{\fat{Policy-Based RL}} \\
-            Directly optimize a parameterized policy function.
-                % \item These methods also include hybrid approaches (actor-critic) that update a parameterised policy function but use value function approximation as a baseline. 
-    
-    \ecol
-    
-\end{frame}
-
 \begin{frame}{Expected Discounted Returns}
 
-    Using RL, we aim to maximize the expected \textbf{return}.
+    Using RL, learn policy $\pi$ that maximizes the expected \textbf{return}.
 
     \blist
-        \item Returns ($u$) are the sum of rewards received over time
+        \item Returns are the sum of rewards received over time
         \item If MDP is non-terminating (i.e. $t \to \infty$), we \textbf{discount} returns to ensures finite (discounted) returns
     \elist
     \vspace{0pt}
@@ -350,30 +349,25 @@
 
     \blist
         \item $\gamma$ is the discount factor, such that $\gamma \in [0, 1]$
-        \item $\pi$ is the behavior policy that determines which actions are chosen.
+        \item $\pi$ is the policy that determines which actions are chosen.
     \elist
 \end{frame}
 
 \begin{frame}{State-Value Functions}
-
     \textbf{State-value} functions $V^{\pi}(s)$ give the 'value' of state $s$ when following the policy $\pi$. 
-    \vspace{0pt}
     \begin{align*}
     V^{\pi}(s) = \mathbb{E}_\pi \left[u^{t} | s^{t} = s \right]
     \end{align*}
-    \vspace{0pt}
+    \pause
     The return ($u$) can be recursively defined as:
-    \vspace{0pt}
     \begin{align*}
             u^t &= r^t +\gamma (r^{t+1} + \gamma r^{t+2} + ... )  \\ &= r^t + \gamma u^{t+1}
     \end{align*}
-    \vspace{0pt}   
+	\pause
     Therefore:
-    \vspace{0pt}
     \begin{align*}
         V^{\pi}(s) = \mathbb{E}_\pi \left[r^t + \gamma u^{t+1}| s^{t} = s \right]
     \end{align*}
-    \vspace{5pt}
 \end{frame}
 
 \begin{frame}[t]{The Bellman Equation}
@@ -565,8 +559,9 @@ The \textit{state-action} value Bellman equation is therefore:
         \mathcal{X} = \rew^t + \gamma Q(\st^{t+1}, \ac^{t+1})
     \end{align*}
     
-    (The immediate reward plus the discounted value of the next state) - note the resemblance to the Bellman equation. 
-    \vspace{10pt}
+    (The immediate reward plus the discounted value of the next state)
+    
+    Note the resemblance to the Bellman equation:
     \begin{align*}
         Q^{\pi}(\st, \ac) = \sum_{\ac \in \Ac} \pi(\ac \mid \st) \sum_{\st' \in \St} \Stf(\st' \mid \st, \ac) \Cboxed{red}{$\left[\Rew(\st, \ac, \st') + \gamma Q^{\pi}(s', a')\right]$}
     \end{align*}
@@ -575,18 +570,17 @@ The \textit{state-action} value Bellman equation is therefore:
 \begin{frame}{SARSA}
     
 The SARSA update rule thus becomes:
-\vspace{0pt}
-\begin{align*}
+$$
   Q(s^t, a^t) \leftarrow Q(s^t, a^t) + \alpha[r^t + \gamma Q(s^{t+1}, a^{t+1})- Q(s^t,a^t)] 
-\end{align*}
+$$
+
+\vspace{5pt}
 
 \blist
-    \item Note the TD error $r^t + \gamma Q(s^{t+1}, a^{t+1})- Q(s^t,a^t)$.
-    \item The TD update is \textbf{bootstrapped}
-    \item Using the value \textbf{estimates} of the next state ($Q(s^{t+1}, a^{t+1})$) to update the current state value ($Q(s^t,a^t)$)
+	\itemsep=10pt
+	\item The TD update is \textbf{bootstrapped}: using the value estimates of the next state ($Q(s^{t+1}, a^{t+1})$) to update the current state value ($Q(s^t,a^t)$)
+    \item $\left( r^t + \gamma Q(s^{t+1}, a^{t+1})- Q(s^t,a^t) \right)$ is also called ``TD error''
 \elist
-
-
 
 \end{frame}
 
@@ -624,18 +618,16 @@ The SARSA update rule thus becomes:
     \vspace{0pt}
     \blist
         \item Intuitively, we must explore a wide range of states and actions to find state action combinations that yield high returns
-        \item One solution is to add an \textbf{exploration} parameter $\epsilon \in [0, 1]$. This gives us a stochastic \textbf{epsilon-greedy} policy.
-    \elist
-    \vspace{0pt}
-    \begin{align*}
+        
+        \item One solution is to add an \textbf{exploration} parameter $\epsilon \in [0, 1]$. This gives us a stochastic \textbf{epsilon-greedy} policy
+    $$
         \pi(a|s) = \begin{cases} 
         1 - \epsilon + \frac{\epsilon}{|A|} & \text{if } a \in \arg\max_{a'} Q(s, a') \\
         \frac{\epsilon}{|A|} & \text{otherwise} 
     \end{cases}
-    \end{align*}
-
-    \blist
-        \item With probability $1-\epsilon$, the policy chooses the greedy action, and with probability $\epsilon$ chooses an action uniformly at random. 
+    $$
+    
+        \item With probability $1-\epsilon$, the policy chooses the greedy action, and with probability $\epsilon$ chooses an action uniformly at random
     \elist
     
 \end{frame}
@@ -654,14 +646,12 @@ The SARSA update rule thus becomes:
 
 \begin{frame}{Q-Learning Update}
 
-    The target in Q-learning uses the \textit{max} operator to target the optimal Q-values directly. 
-    \vspace{00pt}
+    The target in Q-learning uses the \textit{max} operator to target the optimal Q-values directly:
     \begin{align*}
         \mathcal{X} = r^{t} + \gamma \max_{a' \in A}Q(s^{t+1}, a')
     \end{align*}
 
     The Q-learning update is thus:
-    \vspace{0pt}
     \begin{align*}
         Q(s^t, a^t) \gets Q(s^t, a^t) + \alpha \left[ r^t + \gamma \max_{a' \in A} Q(s^{t+1}, a') - Q(s^t, a^t) \right]
     \end{align*}
