@@ -568,7 +568,7 @@ The \textit{state-action} value Bellman equation is therefore:
     
     Note the resemblance to the Bellman equation:
     \begin{align*}
-        Q^{\pi}(\st, \ac) = \sum_{\ac \in \Ac} \pi(\ac \mid \st) \sum_{\st' \in \St} \Stf(\st' \mid \st, \ac) \Cboxed{red}{$\left[\Rew(\st, \ac, \st') + \gamma Q^{\pi}(s', a')\right]$}
+        Q^{\pi}(\st, \ac) = \sum_{\st' \in \St} \Stf(\st' \mid \st, \ac) \Cboxed{red}{$\left[ \Rew(\st, \ac, \st') + \gamma \sum\limits_{\ac' \in \Ac} \pi(\ac' \mid \st') Q^{\pi}(\st', \ac') \right]$}
     \end{align*}
 \end{frame}
 
