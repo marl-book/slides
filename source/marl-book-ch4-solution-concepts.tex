@@ -125,7 +125,7 @@
     	\itemsep=10pt
         \item \(V^{\pi}_i(\hat{h})\) is the \fat{value} (\fat{expected return}) for agent \(i\) when agents follow \fat{joint policy} \(\pi\)
         \item \(Q^{\pi}_i(\hat{h}, a)\) is the expected return for agent \(i\) when agents execute \fat{joint action} \(a\) after \(\hat{h}\) and follow \(\pi\) thereafter
-        \item Given the definition for \(V^{\pi}_i(\hat{h}\)) and  \(Q^{\pi}_i(\hat{h}, a)\), we can define the expected return for agent \(i\) at the initial state \(s^0\) as:
+        \item Given the definition for \(V^{\pi}_i(\hat{h})\) and  \(Q^{\pi}_i(\hat{h}, a)\), we can define the expected return for agent \(i\) at the initial state \(s^0\) as:
     \elist
     \vspace{2pt}
     \[
@@ -423,7 +423,7 @@ Equilibrium solutions are standard solution concepts in MARL, but have \e{limita
       \item<4-> \fat{Incompleteness:}
       \begin{itemize}
         \item Equilibria for sequential games don't specify actions for {\bf off-equilibrium paths}, i.e. paths not specified by equilibrium policy \(\text{Pr}(\hat{h}|\pi) = 0\)
-        \item If there is a temporary disturbance that leads to an off-equilibrium path, the equilibrium policy \(\pi\) does not specify actions to return to a {\bf on-equilibrium} path
+        \item If there is a temporary disturbance that leads to an off-equilibrium path, the equilibrium policy \(\pi\) does not specify actions to return to an {\bf on-equilibrium} path
     \end{itemize}
   \end{itemize}
 \end{frame}
