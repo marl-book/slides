@@ -557,7 +557,7 @@
 \end{frame}
 
 \begin{frame}[t]{Conditional Regret Matching}
-    \e{Conditional regret matching:} compute action probabilities proportional to (positive) average {\it conditional} regrets with respect to most recent selected action $\ac'_i$
+    \e{Conditional regret matching:} compute action probabilities proportional to (positive) average {\it conditional} regrets with respect to most recent selected action $\ac_i^z$
     \bmath
 	\regret_i^z(\ac'_i,\ac_i) = \sum_{e : \ac_i^e = \ac'_i} \left[ \Rew_i( \con{ \ac_i, \jac^e_{-i}} ) - \Rew_i( \jac^e ) \right]
     \emath
