@@ -613,7 +613,7 @@ $$
     \blist
         \item<1-> All \textit{state-action} pairs are explored infinitely many times: $$\forall s \in S, a \in A: \sum_{k=0}^{\infty} \mathbb{I}(s, a) \to \infty $$
 
-        \item<2-> The learning rate $\alpha$ is reduced over time according to the "standard stochastic approximation conditions": $$\forall s \in S, a \in A: \sum_{k=0}^{\infty} \alpha_k(s, a) \to \infty \quad \text{and} \quad \sum_{k=0}^{\infty} \alpha_k(s, a)^2 < \infty$$
+        \item<2-> The learning rate $\alpha$ is reduced over time according to the "standard stochastic approximation conditions": $$\forall s \in S, a \in A: \sum_{k=1}^{\infty} \alpha_k(s, a) \to \infty \quad \text{and} \quad \sum_{k=1}^{\infty} \alpha_k(s, a)^2 < \infty$$
     \elist        
 \end{frame}
 
